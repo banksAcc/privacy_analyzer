@@ -1,7 +1,7 @@
 let results = [];
 
 function getPageText() {
-    return document.body.innerText;
+    return document.body.textContent;
 }
 
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
@@ -12,21 +12,38 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
             sending_date_time: new Date().toISOString()
         };
 
-        fetch('http://localhost:3000/get_info', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data)
-        })
-        .then(response => response.json())
-        .then(apiResponse => {
-            results.push(apiResponse);
-            chrome.storage.local.set({ 'apiResults': results }, () => {
-                sendResponse({ apiResponse: apiResponse });
-            });
-        })
-        .catch(error => console.error('API Error:', error));
+        // Utilizza la chiamata mock invece di fetch
+        mockApiCall(data)
+            .then(apiResponse => {
+                // Aggiungi controllo per duplicati
+                chrome.storage.local.get('apiResults', storageData => {
+                    const storedResults = storageData.apiResults || [];
+                    
+                    const isDuplicate = storedResults.some(result => 
+                        result.sent_page_text === apiResponse.sent_page_text &&
+                        result.sending_date_time === apiResponse.sending_date_time
+                    );
+                    /*
+
+                    if (!isDuplicate) {
+                        storedResults.push(apiResponse);
+                        chrome.storage.local.set({ 'apiResults': storedResults }, () => {
+                            console.log('Data saved to storage:', storedResults);
+                            sendResponse({ apiResponse: apiResponse });
+                        });
+                    } else {
+                        console.log('Duplicate data found. Skipping save.');
+                        sendResponse({ apiResponse: apiResponse });
+                    }
+                    */
+                    storedResults.push(apiResponse);
+                    chrome.storage.local.set({ 'apiResults': storedResults }, () => {
+                        console.log('Data saved to storage:', storedResults);
+                        sendResponse({ apiResponse: apiResponse });
+                    });
+                });
+            })
+            .catch(error => console.error('API Error:', error));
 
         // Indica che la risposta verrà inviata in seguito
         return true;

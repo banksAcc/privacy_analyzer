@@ -12,12 +12,15 @@ document.addEventListener('DOMContentLoaded', () => {
     jsonButton.addEventListener('click', () => {
         chrome.storage.local.get('apiResults', data => {
             const results = data.apiResults || [];
+            console.log('Data retrieved from storage:', results);
             const blob = new Blob([JSON.stringify(results, null, 2)], { type: 'application/json' });
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'results.json';
+            a.download = 'all_results.json';
+            document.body.appendChild(a); // Necessario per Firefox
             a.click();
+            document.body.removeChild(a);
             URL.revokeObjectURL(url);
         });
     });
