@@ -1,36 +1,33 @@
 document.addEventListener('DOMContentLoaded', () => {
     const jsonButton = document.getElementById('jsonButton');
-    const previewElement = document.getElementById('textPreview');
+    const teamLink = document.getElementById('teamLink');
 
-    // Richiedi il testo della pagina al content script
     chrome.tabs.query({ active: true, currentWindow: true }, tabs => {
         chrome.tabs.sendMessage(tabs[0].id, { action: 'getPageText' }, response => {
-            const text = response.text;
-            const maxLength = 200; // Imposta la lunghezza massima dell'anteprima
-            previewElement.textContent = text.length > maxLength ? text.substring(0, maxLength) + '...' : text;
+            // Risposta ricevuta dall'API
+            console.log('API Response:', response.apiResponse);
         });
     });
 
     jsonButton.addEventListener('click', () => {
-        // Apri una nuova scheda con il testo completo
-        chrome.tabs.create({ url: 'popup/text_viewer.html' }, tab => {
-            chrome.tabs.onUpdated.addListener(function onUpdated(tabId, changeInfo) {
-                if (tabId === tab.id && changeInfo.status === 'complete') {
-                    chrome.tabs.sendMessage(tabId, { action: 'setFullText', text: previewElement.textContent });
-                    chrome.tabs.onUpdated.removeListener(onUpdated);
-                }
-            });
+        chrome.storage.local.get('apiResults', data => {
+            const results = data.apiResults || [];
+            const blob = new Blob([JSON.stringify(results, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'results.json';
+            a.click();
+            URL.revokeObjectURL(url);
         });
     });
 
-    const teamLink = document.getElementById('teamLink');
     teamLink.addEventListener('click', (event) => {
         event.preventDefault();
         window.open('about_us.html', '_blank');
         window.close();
     });
 
-    // Fetch and display the location information
     navigator.geolocation.getCurrentPosition(position => {
         const lat = position.coords.latitude;
         const lon = position.coords.longitude;

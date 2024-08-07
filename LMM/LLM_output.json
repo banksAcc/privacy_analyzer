@@ -1,7 +1,7 @@
 {
     "processing_time": "tempo di elaborazione in secondi.",
     "sent_page_text": "il testo della pagina inviato all'LLM.",
-    "LLM_output_short": "output breve (max 500 caratteri), se vuoto, elaborazione non possibil.",
+    "LLM_output_short": "output breve, max 500 caratteri, se vuoto, elaborazione non possibil.",
     "LLM_output_long": "output completo, se vuoto, elaborazione non possibile.",
     "general_cat_5": "punteggio complessivo da 1 a 5, 1 buono, 5 no buono. Definisce come il sito gestisce la privacy, se questo valore è = -1 allora, non è stato possibile completare l'elaborazione.",
     "specific_cat_10": [
