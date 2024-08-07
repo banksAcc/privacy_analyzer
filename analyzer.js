@@ -15,4 +15,4 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     return policyFeatures;
   }
 */
-document.body.style.border = "5px solid red";
+document.body.style.border = "5px solid blue";

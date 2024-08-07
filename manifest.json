@@ -4,19 +4,35 @@
     "version": "1.0",
   
     "description": "Analyze the Privacy policy you are accepting by accessing a web page.",
-  
-    "icons": {
-        "16": "icons/icon-16.png.png",
-        "48": "icons/icon-48.png.png",
-        "128": "icons/icon-128.png.png"
-
+    "icons":{
+      "16": "icons/icon-16.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
     },
-  
+
+
+    "background": {
+      "scripts": ["background.js"]
+    },
+
+    "browser_action":
+    {
+      "default_icon":{
+        "16": "icons/icon-16.png",
+        "48": "icons/icon-48.png",
+        "128": "icons/icon-128.png"
+      },
+      "default_title": "Whereami?",
+      "default_popup": "popup/popup.html"
+    },
+    "permissions": [
+      "geolocation"
+    ],
+
     "content_scripts": [
       {
-        "matches": ["*://*.mozilla.org/*"],
+        "matches": ["<all_urls>"],
         "js": ["analyzer.js"]
       }
     ]
   }
-  
