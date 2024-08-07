@@ -26,7 +26,11 @@
       "default_popup": "popup/popup.html"
     },
     "permissions": [
-      "geolocation"
+      "geolocation",
+      "tabs",
+      "activeTab",
+      "http://*/*",
+      "https://*/*"
     ],
 
     "content_scripts": [

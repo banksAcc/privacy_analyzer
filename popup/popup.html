@@ -9,22 +9,13 @@
     <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-    <div class="container">
-        <div class="row align-items-center header">
-            <div class="col-6">
-                <a href="about_us.html" target="_blank" class="team-link">Team Decompiler</a>
-            </div>
-            <div class="col-6 text-right">
-                <div id="location" class="location-info"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
-            </div>
-        </div>
-        <div class="row justify-content-center content">
-            <button id="jsonButton" class="btn btn-outline-secondary json-button">{..JSON..}</button>
-        </div>
+    <div class="header">
+        <a id="teamLink" href="about_us.html" target="_blank" class="team-link">Team Decompiler</a>
+        <div id="location" class="location-info"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <div class="content">
+        <button id="jsonButton" class="json-button">{..JSON..}</button>
+    </div>
     <script src="popup.js"></script>
 </body>
 </html>
