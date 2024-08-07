@@ -1,0 +1,69 @@
+{
+    "processing_time": "tempo di elaborazione in secondi.",
+    "sent_page_text": "il testo della pagina inviato all'LLM.",
+    "LLM_output_short": "output breve (max 500 caratteri), se vuoto, elaborazione non possibil.",
+    "LLM_output_long": "output completo, se vuoto, elaborazione non possibile.",
+    "general_cat_5": "punteggio complessivo da 1 a 5, 1 buono, 5 no buono. Definisce come il sito gestisce la privacy, se questo valore è = -1 allora, non è stato possibile completare l'elaborazione.",
+    "specific_cat_10": [
+        {
+            "code" : 1,
+            "type" : "First Party Collection/Use",
+            "LMM_output" : "Descriozione di max 500 caratteri",
+            "LMM_rank": "voto da 1 a 3,dove 1 buono 3 no buono "
+        },
+        {
+            "code" : 2,
+            "type" : "Third Party Sharing/Collection",
+            "LMM_output" : "Descriozione di max 500 caratteri",
+            "LMM_rank": "voto da 1 a 3,dove 1 buono 3 no buono "
+        },
+        {
+            "code" : 3,
+            "type" : "User Choice/Control",
+            "LMM_output" : "Descriozione di max 500 caratteri",
+            "LMM_rank": "voto da 1 a 3,dove 1 buono 3 no buono "
+        },
+        {
+            "code" : 4,
+            "type" : "User Access, Edit, & Deletion",
+            "LMM_output" : "Descriozione di max 500 caratteri",
+            "LMM_rank": "voto da 1 a 3,dove 1 buono 3 no buono "
+        },
+        {
+            "code" : 5,
+            "type" : "Data Retention",
+            "LMM_output" : "Descriozione di max 500 caratteri",
+            "LMM_rank": "voto da 1 a 3,dove 1 buono 3 no buono "
+        },
+        {
+            "code" : 6,
+            "type" : "Data Security",
+            "LMM_output" : "Descriozione di max 500 caratteri",
+            "LMM_rank": "voto da 1 a 3,dove 1 buono 3 no buono "
+        },
+        {
+            "code" : 7,
+            "type" : "Policy Change",
+            "LMM_output" : "Descriozione di max 500 caratteri",
+            "LMM_rank": "voto da 1 a 3,dove 1 buono 3 no buono "
+        },
+        {
+            "code" : 8,
+            "type" : "Do Not Track",
+            "LMM_output" : "Descriozione di max 500 caratteri",
+            "LMM_rank": "voto da 1 a 3,dove 1 buono 3 no buono "
+        },
+        {
+            "code" : 9,
+            "type" : "International & Specific Audiences",
+            "LMM_output" : "Descriozione di max 500 caratteri",
+            "LMM_rank": "voto da 1 a 3,dove 1 buono 3 no buono "
+        },
+        {
+            "code" : 10,
+            "type" : "Other",
+            "LMM_output" : "Descriozione di max 500 caratteri",
+            "LMM_rank": "voto da 1 a 3,dove 1 buono 3 no buono "
+        }
+    ]
+}
