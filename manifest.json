@@ -1,25 +1,21 @@
 {
-    "manifest_version": 3,
-    "name": "Privacy Policy Extractor",
+    "manifest_version": 2,
+    "name": "Policy Analyzer",
     "version": "1.0",
-    "description": "Extracts essential features from privacy policies.",
-    "permissions": ["activeTab", "scripting"],
-    "background": {
-      "scripts": ["background.js"],
-      "persistent": false
+  
+    "description": "Analyze the Privacy policy you are accepting by accessing a web page.",
+  
+    "icons": {
+        "16": "icons/icon-16.png.png",
+        "48": "icons/icon-48.png.png",
+        "128": "icons/icon-128.png.png"
+
     },
-    "action": {
-      "default_popup": "popup/popup.html",
-      "default_icon": {
-        "16": "icons/icon16.png",
-        "48": "icons/icon48.png",
-        "128": "icons/icon128.png"
-      }
-    },
+  
     "content_scripts": [
       {
-        "matches": ["<all_urls>"],
-        "js": ["content.js"]
+        "matches": ["*://*.mozilla.org/*"],
+        "js": ["analyzer.js"]
       }
     ]
   }

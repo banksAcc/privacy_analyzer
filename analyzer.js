@@ -1,3 +1,4 @@
+/*
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === 'extractPrivacyPolicy') {
       let policyData = extractPrivacyPolicy();
@@ -13,4 +14,5 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     };
     return policyFeatures;
   }
-  
+*/
+document.body.style.border = "5px solid red";
