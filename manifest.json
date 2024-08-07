@@ -10,11 +10,6 @@
       "128": "icons/icon-128.png"
     },
 
-
-    "background": {
-      "scripts": ["background.js"]
-    },
-
     "browser_action":
     {
       "default_icon":{
@@ -22,7 +17,7 @@
         "48": "icons/icon-48.png",
         "128": "icons/icon-128.png"
       },
-      "default_title": "Whereami?",
+      "default_title": "De Compile Privacy",
       "default_popup": "popup/popup.html"
     },
     "permissions": [
@@ -36,7 +31,7 @@
     "content_scripts": [
       {
         "matches": ["<all_urls>"],
-        "js": ["analyzer.js"]
+        "js": ["content.js"]
       }
     ]
   }
