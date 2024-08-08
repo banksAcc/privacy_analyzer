@@ -34,12 +34,32 @@ body {
     padding: 10px;
 }
 
+.footer {
+    width: 100%;
+    display: flex;
+    padding: 5px;
+    background: #f1f1f1;
+    border-top: 1px solid #ccc;
+}
+
 .json-button {
-    background-color: lightgray;
+    height: 40px;
+    background: lightgrey;
     color: orange;
     font-weight: bold;
-    border-radius: 12px;
-    padding: 10px 20px;
+    margin-right: 10px;
+}
+.clear-button {
+    color: red;
+    background: lightgrey;
+    width: 40px;
+    height: 40px;
+}
+.json-button, .clear-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border: none;
+    border-radius: 12px;
     cursor: pointer;
 }

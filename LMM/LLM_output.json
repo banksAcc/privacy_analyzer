@@ -1,5 +1,6 @@
 {
     "processing_time": "tempo di elaborazione in secondi.",
+    "output_date_time" : "formato ISO 8601 ovv: YYYY-MM-DDTHH:MM:SS",
     "sent_page_text": "il testo della pagina inviato all'LLM.",
     "LLM_output_short": "output breve, max 500 caratteri, se vuoto, elaborazione non possibil.",
     "LLM_output_long": "output completo, se vuoto, elaborazione non possibile.",

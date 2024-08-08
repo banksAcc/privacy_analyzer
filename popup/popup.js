@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'all_results.json';
+            a.download = 'results.json';
             document.body.appendChild(a); // Necessario per Firefox
             a.click();
             document.body.removeChild(a);
