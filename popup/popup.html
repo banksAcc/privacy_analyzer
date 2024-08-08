@@ -1,33 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Popup</title>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="popup.css">
+    <link
+        rel="stylesheet"
+        href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <link rel="stylesheet" href="popup.css" />
 </head>
 <body>
     <div class="header">
-        <p id="teamText" class="team">Team Decompiler</p>
-        <div id="location" class="location-info"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
+        <div class="header-left">
+            <p id="teamText" class="team">Team Decompiler</p>
+            <div id="location" class="location-info">
+                <i class="fas fa-spinner fa-spin"></i> Loading...
+            </div>
+        </div>
+        <div class="header-right">
+            <img src="" alt="Icona di Classificazione" id="11" class="team-icon">
+        </div>
     </div>
     <div class="content">
-        <h1>Risultato Elaborazione</h1>
-        <div id="output"></div>
-        <!-- Content here -->
+        <div class="container">
+            <div class="content-row row">
+                <div class="col-md-6 box-container">
+                    <div class="box">
+                        <div class="box-title">First Party Collection/Use</div>
+                        <div class="box-description" id=12>Desc1</div>
+                        <img src="" id=1 alt="Icona">
+                    </div>
+                </div>
+                <div class="col-md-6 box-container">
+                    <div class="box">
+                        <div class="box-title">Third Party Sharing/Collection</div>
+                        <div class="box-description" id=13>Desc2</div>
+                        <img src="" id=2 alt="Icona">
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-row row">
+                <div class="col-md-6 box-container">
+                    <div class="box">
+                        <div class="box-title">User Choice/Control</div>
+                        <div class="box-description" id=14>Desc3</div>
+                        <img src="" id=3 alt="Icona">
+                    </div>
+                </div>
+                <div class="col-md-6 box-container">
+                    <div class="box">
+                        <div class="box-title">User Access, Edit, & Deletion</div>
+                        <div class="box-description" id=15>Desc4</div>
+                        <img src="" id=4 alt="Icona">
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-row row">
+                <div class="col-md-6 box-container">
+                    <div class="box">
+                        <div class="box-title">Data Retention</div>
+                        <div class="box-description" id=16>Desc5</div>
+                        <img src="" id=5 alt="Icona">
+                    </div>
+                </div>
+                <div class="col-md-6 box-container">
+                    <div class="box">
+                        <div class="box-title">Data Security</div>
+                        <div class="box-description" id=17>Desc6</div>
+                        <img src="" id=6 alt="Icona">
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-row row">
+                <div class="col-md-6 box-container">
+                    <div class="box">
+                        <div class="box-title">Policy Change</div>
+                        <div class="box-description" id=18>Desc7</div>
+                        <img src="" id=7 alt="Icona">
+                    </div>
+                </div>
+                <div class="col-md-6 box-container">
+                    <div class="box">
+                        <div class="box-title">Do Not Track</div>
+                        <div class="box-description" id=19>Desc8</div>
+                        <img src="" id=8 alt="Icona">
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-row row">
+                <div class="col-md-6 box-container">
+                    <div class="box">
+                        <div class="box-title">International & Specific Audiences</div>
+                        <div class="box-description" id=20>Desc9</div>
+                        <img src="" id=9 alt="Icona">
+                    </div>
+                </div>
+                <div class="col-md-6 box-container">
+                    <div class="box">
+                        <div class="box-title">Other</div>
+                        <div class="box-description" id=21>Desc10</div>
+                        <img src="" id=10 alt="Icona">
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="footer">
         <div class="footer-left">
-            <button id="jsonButton" class="json-button"><i class="fas fa-file-download"></i>{..JSON..}</button>
-            <button id="clearButton" class="clear-button"><i class="fas fa-times"></i></button>
+            <button id="jsonButton" class="json-button">
+                <i class="fas fa-file-download"></i>
+                <span class="json-text">JSON Download</span>
+            </button>            
+            <button id="clearButton" class="clear-button">
+                <i class="fas fa-times"></i>
+            </button>
         </div>
         <div class="footer-right">
             <a id="teamLink" href="about_us.html" target="_blank" class="team-link">About Us</a>
         </div>
     </div>
-
+    
     <script src="popup.js"></script>
 </body>
 </html>

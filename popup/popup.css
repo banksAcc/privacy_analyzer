@@ -1,20 +1,13 @@
 body {
-    width: 300px;
-    height: 300px;
+    width: 700px;
+    height: 750px;
     margin: 0;
     font-family: 'Century Gothic', sans-serif;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
-}
 
-.header {
-    width: 100%;
-    padding: 10px;
-    display: flex;
-    justify-content: space-between;
-    flex-direction: column;
 }
 
 .team {
@@ -27,23 +20,19 @@ body {
     text-decoration: none;
 }
 
-.location-info {
-    color: rgb(0, 0, 0);
-}
-
 .content {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: calc(100% - 80px); /* Adjusted to leave space for footer */
-    padding: 10px;
+    height: calc(100% - 180px); /* Adjusted to leave space for footer */
 }
 
 .footer {
     width: 100%;
     display: flex;
     padding: 5px;
+    margin-top: 5px;
     justify-content: space-between;
     background: #f1f1f1;
     border-top: 1px solid #ccc;
@@ -60,18 +49,33 @@ body {
 }
 
 .json-button {
-    height: 40px;
+    height: 55px; /* Aumentato per dare spazio al testo */
     background: lightgrey;
-    color: orange;
+    color: black;
     font-weight: bold;
     margin-right: 5px;
+    display: flex;
+    flex-direction: column; /* Imposta la direzione verticale */
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    box-sizing: border-box;
+    font-size: 24px; /* Imposta la dimensione dell'icona */
+
+}
+
+.json-text {
+    font-size: 9px; /* Dimensione del testo */
+    margin-top: 5px; /* Spazio tra l'icona e il testo */
+    text-align: center; /* Centra il testo sotto l'icona */
+    color: rgb(0, 0, 0); /* Colore del testo */
 }
 
 .clear-button {
     color: red;
     background: lightgrey;
     width: 40px;
-    height: 40px;
+    height: 55px;
 }
 
 .json-button, .clear-button {
@@ -81,4 +85,70 @@ body {
     border: none;
     border-radius: 12px;
     cursor: pointer;
+}
+
+.box {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 1px;
+    text-align: center;
+    background-color: #f9f9f9;
+    margin-bottom: 3px;
+    width: 280px;
+}
+
+.box img {
+    max-width: 50px; /* Adjusted to fit the box properly */
+    height: auto;
+}
+
+.box-description {
+    font-size: 12px;
+    color: #333;
+}
+
+.box-title {
+    font-size: 13px;
+    text-align: left;
+    font-weight: bold;
+    margin-top: 5px;
+    margin-left: 5px;
+}
+
+.content-row {
+    margin-bottom: 1px;
+    display: flex;
+    flex-wrap: nowrap; /* Prevent wrapping to the next line */
+}
+
+.box-container {
+    padding: 0 5px; /* Adjusted spacing between boxes */
+}
+.header {
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.header-left {
+    flex: 1; /* Occupare lo spazio disponibile a sinistra */
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Spazio tra icona e testo */
+}
+
+.team-icon {
+    width: 100px; /* Regola la dimensione dell'icona come necessario */
+    height: auto;
+}
+
+.location-info {
+    display: flex;
+    align-items: center;
+    color: rgb(0, 0, 0);
 }

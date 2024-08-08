@@ -4,12 +4,18 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.type === "extractText") {
         mockApiCall({sending_page_text: message.content})
         .then(data => {
+            // Ottieni l'URL della pagina corrente
+            let currentPageUrl = sender.tab.url;
+
             // Recupera la lista corrente dal chrome.storage.local
             chrome.storage.local.get({processedDataList: []}, function(result) {
                 let processedDataList = result.processedDataList;
 
-                // Aggiungi il nuovo dato alla lista
-                processedDataList.push(data);
+                // Aggiungi il nuovo dato con l'URL della pagina alla lista
+                processedDataList.push({
+                    url: currentPageUrl,
+                    data: data
+                });
 
                 // Salva la lista aggiornata nella memoria locale
                 chrome.storage.local.set({processedDataList: processedDataList}, () => {
@@ -35,62 +41,62 @@ function mockApiCall(data) {
                     {
                         code: 1,
                         type: "First Party Collection/Use",
-                        LMM_output: "Mock descrizione",
+                        LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
                         LMM_rank: 1
                     },
                     {
                         code: 2,
                         type: "Third Party Sharing/Collection",
-                        LMM_output: "Mock descrizione",
+                        LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
                         LMM_rank: 2
                     },
                     {
                         code: 3,
                         type: "User Choice/Control",
-                        LMM_output: "Mock descrizione",
+                        LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
                         LMM_rank: 3
                     },
                     {
                         code: 4,
                         type: "User Access, Edit, & Deletion",
-                        LMM_output: "Descrizione di max 500 caratteri",
+                        LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
                         LMM_rank: 1
                     },
                     {
                         code: 5,
                         type: "Data Retention",
-                        LMM_output: "Descrizione di max 500 caratteri",
-                        LMM_rank: 3
+                        LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
+                        LMM_rank: 2
                     },
                     {
                         code: 6,
                         type: "Data Security",
-                        LMM_output: "Descrizione di max 500 caratteri",
-                        LMM_rank: 2
+                        LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
+                        LMM_rank: 3
                     },
                     {
                         code: 7,
                         type: "Policy Change",
-                        LMM_output: "Descrizione di max 500 caratteri",
+                        LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
                         LMM_rank: 1
                     },
                     {
                         code: 8,
                         type: "Do Not Track",
-                        LMM_output: "Descrizione di max 500 caratteri",
-                        LMM_rank: 1
+                        LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
+                        LMM_rank: 2
                     },
                     {
                         code: 9,
                         type: "International & Specific Audiences",
-                        LMM_output: "Descrizione di max 500 caratteri",
-                        LMM_rank: 2
+                        LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
+                        LMM_rank: 4
                     },
                     {
                         code: 10,
                         type: "Other",
-                        LMM_output: "Descrizione di max 500 caratteri",
-                        LMM_rank: 1
+                        LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
+                        LMM_rank: 0
                     }
                 ]
             });
