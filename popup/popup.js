@@ -2,6 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const jsonButton = document.getElementById('jsonButton');
     const teamLink = document.getElementById('teamLink');
     const moreText = document.getElementById('moreText');
+    const infoIcon = document.getElementById('infoIcon');
 
     // Ottieni l'URL della pagina corrente
     chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
@@ -38,6 +39,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
+
+    infoIcon.addEventListener('click', function () {
+        var menu = document.getElementById('fanMenu');
+        menu.classList.toggle('show');
+    });
     
     //logica per scaricare il file json
     jsonButton.addEventListener('click', () => {
@@ -65,7 +71,8 @@ document.addEventListener('DOMContentLoaded', () => {
         window.open('about_us.html', '_blank');
         window.close();
     });
-    
+
+    //gestiamo visualizzazione del testo completo del LLM
     moreText.addEventListener('click', (event) => {
 
         const blocksToModifyVisibility = document.querySelectorAll('.container'); // Seleziona gli elementi da nascondere
@@ -99,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
         });
-});
+    });
 
     //mostriamo la posizione dell'utente
     navigator.geolocation.getCurrentPosition(position => {

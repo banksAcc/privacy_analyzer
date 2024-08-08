@@ -1,12 +1,12 @@
 body {
-    width: 700px;
-    height: 800px;
     margin: 0;
     font-family: 'Century Gothic', sans-serif;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
+    min-height: 100vh; /* Imposta l'altezza minima del corpo per coprire l'altezza della finestra */
+    overflow: auto; /* Aggiungi barre di scorrimento se necessario */
 
 }
 
@@ -23,6 +23,8 @@ body {
 }
 
 .content {
+    position: relative;
+    z-index: 1; /* Ensure menu is above other elements */
     display:inline;
     flex-direction: column;
     align-items: center;
@@ -38,7 +40,7 @@ body {
     justify-content: space-between;
     background: #f1f1f1;
     border-top: 1px solid #ccc;
-    align-items: center !important;
+    align-items: center;
 }
 
 .footer-left {
@@ -49,7 +51,7 @@ body {
 .json-button {
     height: 55px; /* Aumentato per dare spazio al testo */
     background: lightgrey;
-    color: green;
+    color: rgb(117, 179, 79);
     font-weight: bold;
     margin-right: 5px;
     display: flex;
@@ -66,11 +68,11 @@ body {
     font-size: 9px; /* Dimensione del testo */
     margin-top: 5px; /* Spazio tra l'icona e il testo */
     text-align: center; /* Centra il testo sotto l'icona */
-    color: green; /* Colore del testo */
+    color: rgb(117, 179, 79);/* Colore del testo */
 }
 
 .clear-button {
-    color: red;
+    color: rgb(190, 52, 47);
     background: lightgrey;
     height: 55px;
     font-weight: bold;
@@ -99,7 +101,7 @@ body {
     padding: 1px;
     text-align: center;
     background-color: #f9f9f9;
-    margin-bottom: 3px;
+    margin-bottom: 5px;
     width: 280px;
 }
 
@@ -145,6 +147,7 @@ body {
 }
 
 .header-right {
+    z-index: 200;
     display: flex;
     justify-content: center; /* Centra l'icona orizzontalmente */
     align-items: center; /* Centra l'icona verticalmente */
@@ -212,6 +215,7 @@ body {
 }
 
 .intro-text p {
+    max-width: 520px;
     font-size: 11px; /* Dimensione del testo descrittivo */
     color: #555; /* Colore del testo descrittivo */
 }
@@ -220,5 +224,76 @@ body {
     font-size: 9px; /* Dimensione del testo */
     margin-top: 5px; /* Spazio tra l'icona e il testo */
     text-align: center; /* Centra il testo sotto l'icona */
-    color: red; /* Colore del testo */
+    color:rgb(190, 52, 47); /* Colore del testo */
+}
+
+.info-icon {
+    font-size: 24px;
+    cursor: pointer;
+    position: relative;
+    color:rgb(33, 145, 236);
+}
+
+.fan-menu {
+    border: 1px solid #ddd;
+    padding-top: 10px;
+    padding-right: 5px;
+    padding-left: 5px;
+    padding-bottom: 6px;
+    background-color: #fff;
+    border-radius: 12px;
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    opacity: 0;
+    pointer-events: none;
+    transform-origin: top left; /* Point where the menu opens from */
+    transform: scale(0) rotate(10deg); /* Start scaled down and rotated */
+    /* Adjust position to the right and down from the icon */
+    top: 100%;
+    left: 100%;
+    z-index: 200; /* Ensure menu is above other elements */
+}
+
+.fan-menu.show {
+    opacity: 1;
+    pointer-events: auto;
+    transform: scale(1) rotate(0deg); /* Scale up and reset rotation */
+}
+
+.fan-menu .icon-item {
+    z-index: 200; /* Ensure menu is above other elements */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 4px;
+}
+
+.fan-menu img {
+    z-index: 200; /* Ensure menu is above other elements */
+    height: 30px;
+    margin-bottom: 5px;
+}
+
+.container {
+    width: 100%;
+    max-width: 1200px; /* Imposta una larghezza massima per evitare che il contenuto diventi troppo largo */
+    box-sizing: border-box; /* Include padding e bordi nel calcolo della larghezza */
+}
+
+.content-row {
+    display: flex;
+    flex-wrap: wrap; /* Permette alle righe di andare a capo se necessario */
+    margin: 0 -5px; /* Gestisce lo spazio negativo per compensare il padding delle colonne */
+}
+
+.box-container {
+    padding: 0 5px; /* Aggiunge spazio tra le colonne */
+    box-sizing: border-box; /* Include padding e bordi nel calcolo della larghezza */
+}
+.col-md-6 {
+    flex: 1 1 50%; /* Imposta la larghezza della colonna per occupare metà della larghezza della riga */
+    max-width: 50%; /* Imposta una larghezza massima per evitare che le colonne diventino troppo larghe */
 }
