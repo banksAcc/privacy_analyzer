@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     const jsonButton = document.getElementById('jsonButton');
     const teamLink = document.getElementById('teamLink');
+    const moreText = document.getElementById('moreText');
 
     // Ottieni l'URL della pagina corrente
     chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
@@ -48,6 +49,12 @@ document.addEventListener('DOMContentLoaded', () => {
         window.open('about_us.html', '_blank');
         window.close();
     });
+    
+    moreText.addEventListener('click', (event) => {
+        event.preventDefault();
+        window.open('about_us.html', '_blank');
+        window.close();
+    });
 
     //mostriamo la posizione dell'utente
     navigator.geolocation.getCurrentPosition(position => {
@@ -88,7 +95,7 @@ function updateIconBasedOnGeneralCat(data) {
     for (let i = 0; i < 10; i++) {
         switch (data.specific_cat_10[i].LMM_rank) {
             case 1:
-                document.getElementById(i+1).src = 'rank_icons/one_to_three/good_01.jpg';
+                document.getElementById(i+1).src = '../rank_icons/one_to_three/good_01.jpg';
                 break;
             case 2:
                 document.getElementById(i+1).src = '../rank_icons/one_to_three/neutral_02.jpg';

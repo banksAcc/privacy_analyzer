@@ -1,6 +1,6 @@
 body {
     width: 700px;
-    height: 750px;
+    height: 800px;
     margin: 0;
     font-family: 'Century Gothic', sans-serif;
     display: flex;
@@ -17,11 +17,11 @@ body {
 
 .team-link {
     color: blue;
-    text-decoration: none;
+    font-size: 12px;
 }
 
 .content {
-    display: flex;
+    display:inline;
     flex-direction: column;
     align-items: center;
     justify-content: center;
@@ -36,16 +36,12 @@ body {
     justify-content: space-between;
     background: #f1f1f1;
     border-top: 1px solid #ccc;
+    align-items: center !important;
 }
 
 .footer-left {
     display: flex;
     gap: 5px;
-}
-
-.footer-right {
-    display: flex;
-    align-items: center;
 }
 
 .json-button {
@@ -124,6 +120,7 @@ body {
 .box-container {
     padding: 0 5px; /* Adjusted spacing between boxes */
 }
+
 .header {
     width: 100%;
     padding: 10px;
@@ -151,4 +148,55 @@ body {
     display: flex;
     align-items: center;
     color: rgb(0, 0, 0);
+}
+.location-info i {
+    margin-right: 5px; /* Spazio tra l'icona e il testo */
+}
+
+.footer-right {
+    display: flex;
+    align-items: center;
+    padding-right: 10px;
+}
+
+.icons-container {
+    display: flex;
+    gap: 5px; /* Spazio tra le icone */
+    padding-right: 10px;
+}
+
+.icon-item {
+    text-align: center; /* Centro il testo e le icone */
+}
+
+.icon {
+    width: 25px; /* Imposta la larghezza delle icone */
+    height: auto; /* Mantiene la proporzione dell'altezza */
+}
+
+.icon-description {
+    margin-top: 5px; /* Spazio tra l'icona e la descrizione */
+    font-size: 9px; /* Dimensione del testo per la descrizione */
+    color: #333; /* Colore del testo per la descrizione */
+}
+
+.intro-text {
+    padding-right: 20px;
+    padding-left: 20px;
+    margin-bottom: 4px; /* Spazio tra il testo e i blocchi */
+    text-align: center; /* Centra il testo */
+}
+
+.intro-text h2 {
+    text-align: left;
+    font-size: 8px; /* Dimensione del titolo */
+    margin-bottom: 2px; /* Spazio sotto il titolo */
+    color: blue;
+    cursor: pointer;
+    font-style: italic;
+}
+
+.intro-text p {
+    font-size: 11px; /* Dimensione del testo descrittivo */
+    color: #555; /* Colore del testo descrittivo */
 }
