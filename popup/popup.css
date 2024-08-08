@@ -16,6 +16,8 @@ body {
 }
 
 .team-link {
+    font-style: italic;
+    text-decoration: underline;
     color: blue;
     font-size: 12px;
 }
@@ -47,7 +49,7 @@ body {
 .json-button {
     height: 55px; /* Aumentato per dare spazio al testo */
     background: lightgrey;
-    color: black;
+    color: green;
     font-weight: bold;
     margin-right: 5px;
     display: flex;
@@ -64,14 +66,22 @@ body {
     font-size: 9px; /* Dimensione del testo */
     margin-top: 5px; /* Spazio tra l'icona e il testo */
     text-align: center; /* Centra il testo sotto l'icona */
-    color: rgb(0, 0, 0); /* Colore del testo */
+    color: green; /* Colore del testo */
 }
 
 .clear-button {
     color: red;
     background: lightgrey;
-    width: 40px;
     height: 55px;
+    font-weight: bold;
+    margin-right: 5px;
+    display: flex;
+    flex-direction: column; /* Imposta la direzione verticale */
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    box-sizing: border-box;
+    font-size: 24px; /* Imposta la dimensione dell'icona */
 }
 
 .json-button, .clear-button {
@@ -127,6 +137,7 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    position: relative; /* Aggiungi questa linea se non è già presente */
 }
 
 .header-left {
@@ -135,8 +146,12 @@ body {
 
 .header-right {
     display: flex;
-    align-items: center;
+    justify-content: center; /* Centra l'icona orizzontalmente */
+    align-items: center; /* Centra l'icona verticalmente */
     gap: 10px; /* Spazio tra icona e testo */
+    position: absolute; /* Assicura che sia posizionato in modo preciso */
+    right: 50%; /* Sposta il div a sinistra del 50% della larghezza totale */
+    transform: translateX(50%); /* Riporta il div al centro */
 }
 
 .team-icon {
@@ -199,4 +214,11 @@ body {
 .intro-text p {
     font-size: 11px; /* Dimensione del testo descrittivo */
     color: #555; /* Colore del testo descrittivo */
+}
+
+.clearButton-text{
+    font-size: 9px; /* Dimensione del testo */
+    margin-top: 5px; /* Spazio tra l'icona e il testo */
+    text-align: center; /* Centra il testo sotto l'icona */
+    color: red; /* Colore del testo */
 }

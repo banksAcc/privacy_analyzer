@@ -18,7 +18,23 @@ document.addEventListener('DOMContentLoaded', () => {
             if (currentPageData) {
                 updateIconBasedOnGeneralCat(currentPageData.data);
             } else {
-                //outputDiv.innerText = 'Nessun dato disponibile per questa pagina.';
+                chrome.tabs.sendMessage(tabs[0].id, { action: "getContent" }, function (response) {
+                    let currentPageUrl = tabs[0].url;
+
+                    chrome.runtime.sendMessage({
+                        type: "extractText",
+                        content: response.content,
+                        url: currentPageUrl // Ottieni l'URL della scheda corrente
+
+                    }, function(response) {
+                        // Richiesta di estrazione completata, ora possiamo aggiornare le icone
+                        if (response && response.success && response.data) {
+                            updateIconBasedOnGeneralCat(response.data);
+                        } else {
+                            console.error("Errore durante l'elaborazione dei dati.");
+                        }
+                    });
+                });
             }
         });
     });
@@ -51,10 +67,39 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     moreText.addEventListener('click', (event) => {
-        event.preventDefault();
-        window.open('about_us.html', '_blank');
-        window.close();
-    });
+
+        const blocksToModifyVisibility = document.querySelectorAll('.container'); // Seleziona gli elementi da nascondere
+        blocksToModifyVisibility.forEach(block => {
+            // Ottieni lo stile computato dell'elemento
+            const currentDisplay = window.getComputedStyle(block).display;
+            
+            // Alterna la visibilità
+            if (currentDisplay === 'none') {
+                block.style.display = 'block'; // Mostra l'elemento
+            } else {
+                block.style.display = 'none'; // Nasconde l'elemento
+            }
+        });
+        // Ottieni l'URL della pagina corrente
+        chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+            let currentPageUrl = tabs[0].url;
+        
+            getCurretPageData(currentPageUrl, function(output) {
+                if (output) {
+                    if (document.getElementById(25).innerText == output.data.LLM_output_short) {
+                        document.getElementById(25).innerText = output.data.LLM_output_long;
+                        document.getElementById("moreText").innerText = "Less...";
+                    }
+                    else {
+                        document.getElementById(25).innerText = output.data.LLM_output_short;
+                        document.getElementById("moreText").innerText = "More...";
+                    }
+                } else {
+                    console.error('Nessun dato disponibile per questa pagina.');
+                }
+            });
+        });
+});
 
     //mostriamo la posizione dell'utente
     navigator.geolocation.getCurrentPosition(position => {
@@ -134,4 +179,15 @@ function updateIconBasedOnGeneralCat(data) {
             document.getElementById(11).src= '../rank_icons/one_to_five/classNo.jpg'; // Default icon
             break;
     }
+
+    document.getElementById(25).innerText = data.LLM_output_short;
+}
+
+function getCurretPageData(currentPageUrl, callback) {
+    chrome.storage.local.get('processedDataList', function (result) {
+        let processedDataList = result.processedDataList || [];
+        // Filtra i dati per l'URL della pagina corrente
+        let currentPageData = processedDataList.find(entry => entry.url === currentPageUrl);
+        callback(currentPageData); // Passa i dati alla callback
+    });
 }
