@@ -10,15 +10,22 @@
 </head>
 <body>
     <div class="header">
-        <a id="teamLink" href="about_us.html" target="_blank" class="team-link">Team Decompiler - About Us</a>
+        <p id="teamText" class="team">Team Decompiler</p>
         <div id="location" class="location-info"><i class="fas fa-spinner fa-spin"></i> Loading...</div>
     </div>
     <div class="content">
+        <h1>Risultato Elaborazione</h1>
+        <div id="output"></div>
         <!-- Content here -->
     </div>
     <div class="footer">
-        <button id="jsonButton" class="json-button"><i class="fas fa-file-download"></i>{..JSON..}</button>
-        <button id="clearButton" class="clear-button"><i class="fas fa-times"></i></button>
+        <div class="footer-left">
+            <button id="jsonButton" class="json-button"><i class="fas fa-file-download"></i>{..JSON..}</button>
+            <button id="clearButton" class="clear-button"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="footer-right">
+            <a id="teamLink" href="about_us.html" target="_blank" class="team-link">About Us</a>
+        </div>
     </div>
 
     <script src="popup.js"></script>

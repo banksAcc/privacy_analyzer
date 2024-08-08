@@ -1,49 +1,16 @@
-/*
-let results = [];
-document.body.style.border = "5px solid orange";
+// background.js
 
-
-function getPageText() {
-    return document.body.innerText;
-}
-
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    if (request.action === 'getPageText') {
-        const text = getPageText();
-        const data = {
-            sending_page_text: text,
-            sending_date_time: new Date().toISOString()
-        };
-
-        // Utilizza la chiamata mock invece di fetch
-        mockApiCall(data)
-            .then(apiResponse => {
-                // Aggiungi controllo per duplicati
-                chrome.storage.local.get('apiResults', storageData => {
-                    const storedResults = storageData.apiResults || [];
-                    
-                    const isDuplicate = storedResults.some(result => 
-                        result.sent_page_text === apiResponse.sent_page_text &&
-                        result.sending_date_time === apiResponse.sending_date_time
-                    );
-
-                    if (!isDuplicate) {
-                        storedResults.push(apiResponse);
-                        chrome.storage.local.set({ 'apiResults': storedResults }, () => {
-                            console.log('Data saved to storage:', storedResults);
-                            sendResponse({ apiResponse: apiResponse });
-                        });
-                    } else {
-                        console.log('Duplicate data found. Skipping save.');
-                        sendResponse({ apiResponse: apiResponse });
-                    }
-                    
-                });
-            })
-            .catch(error => console.error('API Error:', error));
-
-        // Indica che la risposta verrà inviata in seguito
-        return true;
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    if (message.type === "extractText") {
+        // Usa la funzione mockApiCall al posto della fetch
+        mockApiCall({sending_page_text: message.content})
+        .then(data => {
+            // Salva la risposta nella memoria locale del browser
+            chrome.storage.local.set({ processedData: data }, () => {
+                console.log("Dati mock salvati nella memoria locale del browser.");
+            });
+        })
+        .catch(error => console.error('Errore nella chiamata mock:', error));
     }
 });
 
@@ -123,12 +90,3 @@ function mockApiCall(data) {
         }, 1000); // Simula un ritardo di 1 secondo
     });
 }
-*/
-document.body.style.border = "5px solid orange";
-
-// Estrai il contenuto testuale della pagina
-let pageContent = document.body.innerText;
-
-// Invia il contenuto al background script
-chrome.runtime.sendMessage({type: "extractText", content: pageContent});
-
