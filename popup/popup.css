@@ -5,14 +5,13 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height: 100vh; /* Imposta l'altezza minima del corpo per coprire l'altezza della finestra */
+    min-height:220px ;
     overflow: auto; /* Aggiungi barre di scorrimento se necessario */
 
 }
 
 .team {
     color: black;
-    text-decoration: none;
 }
 
 .team-link {
@@ -181,6 +180,9 @@ body {
     display: flex;
     gap: 5px; /* Spazio tra le icone */
     padding-right: 10px;
+    position: relative;
+    top: 10px; /* Abbassa il contenuto senza spostare il footer */
+    right: 10px;
 }
 
 .icon-item {
@@ -296,4 +298,15 @@ body {
 .col-md-6 {
     flex: 1 1 50%; /* Imposta la larghezza della colonna per occupare metà della larghezza della riga */
     max-width: 50%; /* Imposta una larghezza massima per evitare che le colonne diventino troppo larghe */
+}
+
+button:focus {
+    outline: none; /* Rimuove il bordo puntellato predefinito */
+}
+
+/* Aggiungi uno stile di pressione quando il pulsante è attivo */
+button:active {
+    background-color: #ddd; /* Cambia il colore di sfondo per l'effetto di pressione */
+    border: 1px solid #ccc; /* Cambia il colore del bordo per l'effetto di pressione */
+    transform: translateY(2px); /* Simula l'effetto di pressione spostando il pulsante verso il basso */
 }

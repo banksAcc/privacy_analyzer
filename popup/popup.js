@@ -21,20 +21,23 @@ document.addEventListener('DOMContentLoaded', () => {
             } else {
                 chrome.tabs.sendMessage(tabs[0].id, { action: "getContent" }, function (response) {
                     let currentPageUrl = tabs[0].url;
-
-                    chrome.runtime.sendMessage({
+                    try {
+                        chrome.runtime.sendMessage({
                         type: "extractText",
                         content: response.content,
-                        url: currentPageUrl // Ottieni l'URL della scheda corrente
-
-                    }, function(response) {
+                            url: currentPageUrl // Ottieni l'URL della scheda corrente
+                        },function (response) {
                         // Richiesta di estrazione completata, ora possiamo aggiornare le icone
-                        if (response && response.success && response.data) {
-                            updateIconBasedOnGeneralCat(response.data);
-                        } else {
-                            console.error("Errore durante l'elaborazione dei dati.");
-                        }
-                    });
+                            if (response && response.success && response.data) {
+                                updateIconBasedOnGeneralCat(response.data);
+                            } else {
+                                console.error("Errore durante l'elaborazione dei dati.");
+                            }
+                        });
+                    } catch (error) {
+                        console.error("Errore durante la gestione della risposta:", error.message);
+                        updateIconPageNotEvaluated();
+                    }
                 });
             }
         });
@@ -102,6 +105,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         document.getElementById("moreText").innerText = "More...";
                     }
                 } else {
+                    updateIconPageNotEvaluated();
                     console.error('Nessun dato disponibile per questa pagina.');
                 }
             });
@@ -188,6 +192,18 @@ function updateIconBasedOnGeneralCat(data) {
     }
 
     document.getElementById(25).innerText = data.LLM_output_short;
+}
+
+function updateIconPageNotEvaluated() {
+    const blocksToModifyVisibility = document.querySelectorAll('.container'); // Seleziona gli elementi da nascondere
+    blocksToModifyVisibility.forEach(block => {
+        block.style.display = 'none';
+    });
+    document.getElementById("moreText").style.display = 'none';
+    document.getElementById(11).style.display = 'none';
+    document.getElementById("infoIcon").style.display = 'none';
+    document.getElementById(25).innerText = "The analysis did not give valid results. Reload the page or reopen the popup. If the problem persists, it may be a data problem on this page.";
+
 }
 
 function getCurretPageData(currentPageUrl, callback) {
