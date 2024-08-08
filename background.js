@@ -2,12 +2,19 @@
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.type === "extractText") {
-        // Usa la funzione mockApiCall al posto della fetch
         mockApiCall({sending_page_text: message.content})
         .then(data => {
-            // Salva la risposta nella memoria locale del browser
-            chrome.storage.local.set({ processedData: data }, () => {
-                console.log("Dati mock salvati nella memoria locale del browser.");
+            // Recupera la lista corrente dal chrome.storage.local
+            chrome.storage.local.get({processedDataList: []}, function(result) {
+                let processedDataList = result.processedDataList;
+
+                // Aggiungi il nuovo dato alla lista
+                processedDataList.push(data);
+
+                // Salva la lista aggiornata nella memoria locale
+                chrome.storage.local.set({processedDataList: processedDataList}, () => {
+                    console.log("Dati mock aggiunti alla lista nella memoria locale.");
+                });
             });
         })
         .catch(error => console.error('Errore nella chiamata mock:', error));

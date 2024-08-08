@@ -12,18 +12,21 @@ document.addEventListener('DOMContentLoaded', () => {
     */
 
     jsonButton.addEventListener('click', () => {
-        chrome.storage.local.get('processedData', data => {
-            const results = data.processedData || [];
-            console.log('Data retrieved from storage:', results);
-            const blob = new Blob([JSON.stringify(results, null, 2)], { type: 'application/json' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'results.json';
-            document.body.appendChild(a); // Necessario per Firefox
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+        chrome.storage.local.get('processedDataList', function(result) {
+            if (result.processedDataList && result.processedDataList.length > 0) {
+                let dataStr = JSON.stringify(result.processedDataList, null, 2);
+                let blob = new Blob([dataStr], { type: 'application/json' });
+                let url = URL.createObjectURL(blob);
+                let a = document.createElement('a');
+                a.href = url;
+                a.download = 'processedDataList.json';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            } else {
+                console.log('Nessun dato da scaricare.');
+            }
         });
     });
 
@@ -55,19 +58,19 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('location').textContent = 'Location access denied';
     });
 
-    chrome.storage.local.get('processedData', function(data) {
-        if (data.processedData) {
-            document.getElementById('output').innerText = JSON.stringify(data.processedData, null, 2);
+    chrome.storage.local.get('processedDataList', function(result) {
+        let outputDiv = document.getElementById('output');
+        if (result.processedDataList && result.processedDataList.length > 0) {
+            outputDiv.innerText = JSON.stringify(result.processedDataList, null, 2);
         } else {
-            document.getElementById('output').innerText = 'Nessun dato disponibile.';
+            outputDiv.innerText = 'Nessun dato disponibile.';
         }
     });
     
     // Aggiungi il listener per il pulsante di pulizia
     document.getElementById('clearButton').addEventListener('click', function() {
         // Cancella i dati memorizzati nel browser
-        chrome.storage.local.remove('processedData', function() {
-            // Aggiorna l'interfaccia utente dopo aver pulito i dati
+        chrome.storage.local.remove('processedDataList', function() {
             document.getElementById('output').innerText = 'Dati cancellati.';
             console.log("Dati cancellati dalla memoria locale.");
         });
