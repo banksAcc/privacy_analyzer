@@ -1,4 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
+    
+    // Variabile globale per memorizzare i riferimenti ai grafici
+    const charts = {};
+    
     const jsonButton = document.getElementById('jsonButton');
     const teamLink = document.getElementById('teamLink');
     const moreText = document.getElementById('moreText');
@@ -132,11 +136,10 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Aggiungi il listener per il pulsante di pie chart
+    // Gestisci l'evento click sul pieChart
     pieChart.addEventListener('click', () => {
         const typeValue = pieChart.getAttribute('type');
-        console.log("putno 1");
-        // Puoi anche gestire logica basata sul valore 'type'
+
         if (typeValue === 'showPie') {
             pieChart.setAttribute('type', 'showText');
             pieChart.classList.add('fa-comments');
@@ -148,12 +151,17 @@ document.addEventListener('DOMContentLoaded', () => {
                     const processedDataList = result.processedDataList;
 
                     for (let i = 30; i <= 39; i++) {
+                        const chartData = getDataForChart(i - 29, processedDataList);
+                        const canvasId = i.toString();
+                        const ctx = document.getElementById(canvasId).getContext('2d');
 
-                        const chartData = getDataForChart(i-29, processedDataList);
+                        // Distruggi il grafico esistente se presente
+                        if (charts[canvasId]) {
+                            charts[canvasId].destroy();
+                        }
 
-                        const ctx = document.getElementById(i.toString()).getContext('2d');
-
-                        const pieChart = new Chart(ctx, {
+                        // Crea un nuovo grafico
+                        charts[canvasId] = new Chart(ctx, {
                             type: 'pie',
                             data: {
                                 labels: chartData.labels,
@@ -180,12 +188,13 @@ document.addEventListener('DOMContentLoaded', () => {
                                 }
                             }
                         });
+
                         // Ottieni l'URL della pagina corrente
                         chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
                             let currentPageUrl = tabs[0].url;
 
-                            // Supponendo che tu abbia già creato il grafico `myPieChart`
-                            highlightChartSlice(currentPageUrl, processedDataList, pieChart, i - 29);
+                            // Evidenzia lo spicchio corrispondente
+                            highlightChartSlice(currentPageUrl, processedDataList, charts[canvasId], i - 29);
                         });
                     }
                 } else {
@@ -200,6 +209,7 @@ document.addEventListener('DOMContentLoaded', () => {
             hideDisplayBlockInfoForPie(false);
         }
     });
+
 });
 
 function updateIconBasedOnGeneralCat(data) {
