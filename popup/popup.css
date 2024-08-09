@@ -348,3 +348,17 @@ button:active {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
+
+.chart-container {
+    width: 100px;
+    height: 100px;
+    margin: 5px;
+    display: flex;
+    justify-content: center; /* Allinea orizzontalmente al centro */
+    align-items: center; /* Allinea verticalmente al centro */
+}
+canvas {
+    display: flex;
+    max-width: 100%; /* Mantieni il canvas all'interno del contenitore */
+    max-height: 100%; /* Mantieni il canvas all'interno del contenitore */
+}

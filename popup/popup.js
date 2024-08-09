@@ -6,7 +6,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const clearButton = document.getElementById('clearButton');
     const pieChart = document.getElementById('pie-chart');
 
-
     // Ottieni l'URL della pagina corrente
     chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
         let currentPageUrl = tabs[0].url;
@@ -143,14 +142,49 @@ document.addEventListener('DOMContentLoaded', () => {
             pieChart.classList.add('fa-comments');
             pieChart.classList.remove('fa-chart-pie');
             hideDisplayBlockInfoForPie(true);
+            // Dati di esempio
+            const data = [10, 20, 30];
+            const backgroundColors = ['#FF6384', '#36A2EB', '#FFCE56'];
+        
+            for (let i = 30; i <= 39; i++) {
+                const ctx = document.getElementById(i.toString()).getContext('2d');
+                new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Category 1', 'Category 2', 'Category 3'],
+                        datasets: [{
+                            label: 'My Pie Chart',
+                            data: data,
+                            backgroundColor: backgroundColors,
+                            borderColor: ['#FFFFFF', '#FFFFFF', '#FFFFFF'],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: false // Disabilita la legenda
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(tooltipItem) {
+                                        return `${tooltipItem.label}: ${tooltipItem.raw}`;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
         } else {
             pieChart.setAttribute('type', 'showPie');
             pieChart.classList.add('fa-chart-pie');
             pieChart.classList.remove('fa-comments');
             hideDisplayBlockInfoForPie(false);
         }
-    });
-    
+    });    
 });
 
 function updateIconBasedOnGeneralCat(data) {
@@ -177,6 +211,12 @@ function updateIconBasedOnGeneralCat(data) {
         document.getElementById(i).innerText = data.specific_cat_10[i-12].LMM_output
 
     }
+
+    const pieFather = document.querySelectorAll('.chart-container'); // Seleziona gli elementi da nascondere
+    pieFather.forEach(block => {
+        block.style.display = 'none';
+    });
+
     switch ( data.general_cat_5) {
         case 1:
             document.getElementById(11).src = '../rank_icons/one_to_five/classA_01.jpg';
@@ -238,12 +278,24 @@ function hideDisplayBlockInfoForPie(hide) {
             document.getElementById(i + 1).style.display = 'none';
         for (let i = 12; i < 22; i++)
             document.getElementById(i).style.display = 'none';
+
+        const pieFather = document.querySelectorAll('.chart-container'); // Seleziona gli elementi da nascondere
+        pieFather.forEach(block => {
+            block.style.display = 'flex';
+        });
+
     } else {
         //show the element
         for (let i = 0; i < 10; i++) 
             document.getElementById(i + 1).style.display = 'flex';
         for (let i = 12; i < 22; i++)
             document.getElementById(i).style.display = 'flex';
+
+        const pieFather = document.querySelectorAll('.chart-container'); // Seleziona gli elementi da nascondere
+        pieFather.forEach(block => {
+            block.style.display = 'none';
+        });
+
     }
     
 }
