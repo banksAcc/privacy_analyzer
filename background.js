@@ -11,15 +11,25 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 chrome.storage.local.get({ processedDataList: [] }, function (result) {
                     let processedDataList = result.processedDataList;
 
-                    // Aggiungi il nuovo dato con l'URL della pagina alla lista
-                    processedDataList.push({
-                        url: currentPageUrl,
-                        data: data
-                    });
+                    // Trova l'indice dell'elemento con lo stesso URL
+                    const existingIndex = processedDataList.findIndex(item => item.url === currentPageUrl);
+
+                    if (existingIndex !== -1) {
+                        // L'URL esiste già, sostituisci i dati con quelli più recenti
+                        processedDataList[existingIndex].data = data;
+                        console.log(`Dati aggiornati per l'URL: ${currentPageUrl}`);
+                    } else {
+                        // L'URL non esiste, aggiungi i nuovi dati
+                        processedDataList.push({
+                            url: currentPageUrl,
+                            data: data
+                        });
+                        console.log("Nuovi dati aggiunti alla lista.");
+                    }
 
                     // Salva la lista aggiornata nella memoria locale
                     chrome.storage.local.set({ processedDataList: processedDataList }, () => {
-                        console.log("Dati mock aggiunti alla lista nella memoria locale.");
+                        console.log("Dati memorizzati nella memoria locale.");
                         // Rispondi al content script con i dati elaborati
                         sendResponse({ success: true, data: data });
                     });

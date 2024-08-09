@@ -5,7 +5,7 @@ body {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    min-height:220px ;
+    min-height:150px ;
     overflow: auto; /* Aggiungi barre di scorrimento se necessario */
 
 }
@@ -35,7 +35,6 @@ body {
     width: 100%;
     display: flex;
     padding: 5px;
-    margin-top: 5px;
     justify-content: space-between;
     background: #f1f1f1;
     border-top: 1px solid #ccc;
@@ -48,7 +47,7 @@ body {
 }
 
 .json-button {
-    height: 55px; /* Aumentato per dare spazio al testo */
+    height: 45px; /* Aumentato per dare spazio al testo */
     background: lightgrey;
     color: rgb(117, 179, 79);
     font-weight: bold;
@@ -59,7 +58,7 @@ body {
     justify-content: center;
     padding: 10px;
     box-sizing: border-box;
-    font-size: 24px; /* Imposta la dimensione dell'icona */
+    font-size: 18px; /* Imposta la dimensione dell'icona */
 
 }
 
@@ -73,7 +72,7 @@ body {
 .clear-button {
     color: rgb(190, 52, 47);
     background: lightgrey;
-    height: 55px;
+    height: 45px;
     font-weight: bold;
     margin-right: 5px;
     display: flex;
@@ -82,7 +81,7 @@ body {
     justify-content: center;
     padding: 10px;
     box-sizing: border-box;
-    font-size: 24px; /* Imposta la dimensione dell'icona */
+    font-size: 18px; /* Imposta la dimensione dell'icona */
 }
 
 .json-button, .clear-button {
@@ -136,7 +135,8 @@ body {
     width: 100%;
     padding: 10px;
     display: flex;
-    justify-content: space-between;
+    gap: 10px; /* Spazio tra icona e testo */
+    justify-content: center;
     align-items: center;
     position: relative; /* Aggiungi questa linea se non è già presente */
 }
@@ -254,8 +254,8 @@ body {
     transform-origin: top left; /* Point where the menu opens from */
     transform: scale(0) rotate(10deg); /* Start scaled down and rotated */
     /* Adjust position to the right and down from the icon */
-    top: 100%;
-    left: 100%;
+    top: 55px;
+    left: 212px;
     z-index: 200; /* Ensure menu is above other elements */
 }
 
@@ -309,4 +309,37 @@ button:active {
     background-color: #ddd; /* Cambia il colore di sfondo per l'effetto di pressione */
     border: 1px solid #ccc; /* Cambia il colore del bordo per l'effetto di pressione */
     transform: translateY(2px); /* Simula l'effetto di pressione spostando il pulsante verso il basso */
+}
+
+.footer-bottom{
+    padding: 7px 0px 10px 0px;
+    height: 10px;
+    justify-content: center !important;
+    border-top: 0px !important;
+    text-align: center !important ;
+}
+.footer-text {
+    margin-bottom: 10px;
+    font-size: 10px;
+    color: #777;
+    text-align: center;
+}
+
+.loading-spinner {
+    display: none; /* Nasconde lo spinner di default */
+    border: 4px solid #f3f3f3; /* Colore di sfondo del bordo */
+    border-top: 4px solid #3498db; /* Colore della parte animata */
+    border-radius: 50%; /* Rende il loader circolare */
+    width: 30px; /* Larghezza dello spinner */
+    height: 30px; /* Altezza dello spinner */
+    animation: spin 1s linear infinite; /* Anima la rotazione */
+    margin-top: 10px; /* Spazio sopra lo spinner */
+    margin-bottom: 10px; /* Spazio sopra lo spinner */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }

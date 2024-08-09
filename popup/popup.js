@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (currentPageData) {
                 updateIconBasedOnGeneralCat(currentPageData.data);
             } else {
+                updateIconPageNotEvaluated();
                 chrome.tabs.sendMessage(tabs[0].id, { action: "getContent" }, function (response) {
                     let currentPageUrl = tabs[0].url;
                     try {
@@ -35,7 +36,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             }
                         });
                     } catch (error) {
-                        console.error("Errore durante la gestione della risposta:", error.message);
+                        console.log("Url pagina non definito: ", error.message);
                         updateIconPageNotEvaluated();
                     }
                 });
@@ -106,41 +107,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 } else {
                     updateIconPageNotEvaluated();
-                    console.error('Nessun dato disponibile per questa pagina.');
+                    console.log('Nessun dato disponibile per questa pagina.');
                 }
             });
         });
     });
 
-    //mostriamo la posizione dell'utente
-    navigator.geolocation.getCurrentPosition(position => {
-        const lat = position.coords.latitude;
-        const lon = position.coords.longitude;
-
-        const locationUrl = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`;
-
-        fetch(locationUrl)
-            .then(response => response.json())
-            .then(data => {
-                const locationElement = document.getElementById('location');
-                const city = data.city || data.locality;
-                locationElement.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${city}`;
-            })
-            .catch(error => {
-                console.error('Error fetching location data:', error);
-                document.getElementById('location').textContent = 'Error fetching location';
-            });
-    }, error => {
-        console.error('Error getting location:', error);
-        document.getElementById('location').textContent = 'Location access denied';
-    });
-    
     // Aggiungi il listener per il pulsante di pulizia
     document.getElementById('clearButton').addEventListener('click', function() {
         // Cancella i dati memorizzati nel browser
         chrome.storage.local.remove('processedDataList', function() {
             //document.getElementById('output').innerText = 'Dati cancellati.';
             console.log("Dati cancellati dalla memoria locale.");
+            // Chiudi il popup dell'estensione
+            window.close();
         });
     });
     
@@ -190,8 +170,14 @@ function updateIconBasedOnGeneralCat(data) {
             document.getElementById(11).src= '../rank_icons/one_to_five/classNo.jpg'; // Default icon
             break;
     }
+    const blocksToModifyVisibility = document.querySelectorAll('.container'); // Seleziona gli elementi da nascondere
+    blocksToModifyVisibility.forEach(block => {
+        block.style.display = 'block';
+    });
 
+    document.getElementById("loading-spinner").style.display = "none";
     document.getElementById(25).innerText = data.LLM_output_short;
+    document.getElementById("moreText").style.display = 'block';
 }
 
 function updateIconPageNotEvaluated() {
@@ -200,8 +186,8 @@ function updateIconPageNotEvaluated() {
         block.style.display = 'none';
     });
     document.getElementById("moreText").style.display = 'none';
-    document.getElementById(11).style.display = 'none';
-    document.getElementById("infoIcon").style.display = 'none';
+    document.getElementById(11).src = '../rank_icons/one_to_five/classNo.jpg'; // Default icon
+    document.getElementById("loading-spinner").style.display = "block";
     document.getElementById(25).innerText = "The analysis did not give valid results. Reload the page or reopen the popup. If the problem persists, it may be a data problem on this page.";
 
 }
