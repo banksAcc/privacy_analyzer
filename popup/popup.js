@@ -3,6 +3,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const teamLink = document.getElementById('teamLink');
     const moreText = document.getElementById('moreText');
     const infoIcon = document.getElementById('infoIcon');
+    const clearButton = document.getElementById('clearButton');
+    const pieChart = document.getElementById('pie-chart');
+
 
     // Ottieni l'URL della pagina corrente
     chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
@@ -80,9 +83,10 @@ document.addEventListener('DOMContentLoaded', () => {
     moreText.addEventListener('click', (event) => {
 
         const blocksToModifyVisibility = document.querySelectorAll('.container'); // Seleziona gli elementi da nascondere
+        let currentDisplay;
         blocksToModifyVisibility.forEach(block => {
             // Ottieni lo stile computato dell'elemento
-            const currentDisplay = window.getComputedStyle(block).display;
+            currentDisplay = window.getComputedStyle(block).display;
             
             // Alterna la visibilità
             if (currentDisplay === 'none') {
@@ -91,6 +95,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 block.style.display = 'none'; // Nasconde l'elemento
             }
         });
+        if (currentDisplay == 'none')
+            document.getElementById("pie-chart").style.display = "block";
+        else
+        document.getElementById("pie-chart").style.display = "none";
+            
         // Ottieni l'URL della pagina corrente
         chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
             let currentPageUrl = tabs[0].url;
@@ -114,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Aggiungi il listener per il pulsante di pulizia
-    document.getElementById('clearButton').addEventListener('click', function() {
+    clearButton.addEventListener('click', function() {
         // Cancella i dati memorizzati nel browser
         chrome.storage.local.remove('processedDataList', function() {
             //document.getElementById('output').innerText = 'Dati cancellati.';
@@ -122,6 +131,24 @@ document.addEventListener('DOMContentLoaded', () => {
             // Chiudi il popup dell'estensione
             window.close();
         });
+    });
+
+    // Aggiungi il listener per il pulsante di pie chart
+    pieChart.addEventListener('click', () => {
+        const typeValue = pieChart.getAttribute('type');
+        console.log("putno 1");
+        // Puoi anche gestire logica basata sul valore 'type'
+        if (typeValue === 'showPie') {
+            pieChart.setAttribute('type', 'showText');
+            pieChart.classList.add('fa-comments');
+            pieChart.classList.remove('fa-chart-pie');
+            hideDisplayBlockInfoForPie(true);
+        } else {
+            pieChart.setAttribute('type', 'showPie');
+            pieChart.classList.add('fa-chart-pie');
+            pieChart.classList.remove('fa-comments');
+            hideDisplayBlockInfoForPie(false);
+        }
     });
     
 });
@@ -175,6 +202,7 @@ function updateIconBasedOnGeneralCat(data) {
         block.style.display = 'block';
     });
 
+    document.getElementById("pie-chart").style.display = 'block';
     document.getElementById("loading-spinner").style.display = "none";
     document.getElementById(25).innerText = data.LLM_output_short;
     document.getElementById("moreText").style.display = 'block';
@@ -185,6 +213,8 @@ function updateIconPageNotEvaluated() {
     blocksToModifyVisibility.forEach(block => {
         block.style.display = 'none';
     });
+
+    document.getElementById("pie-chart").style.display = 'none';
     document.getElementById("moreText").style.display = 'none';
     document.getElementById(11).src = '../rank_icons/one_to_five/classNo.jpg'; // Default icon
     document.getElementById("loading-spinner").style.display = "block";
@@ -199,4 +229,21 @@ function getCurretPageData(currentPageUrl, callback) {
         let currentPageData = processedDataList.find(entry => entry.url === currentPageUrl);
         callback(currentPageData); // Passa i dati alla callback
     });
+}
+
+function hideDisplayBlockInfoForPie(hide) {
+    if (hide) {
+        //hide the element
+        for (let i = 0; i < 10; i++) 
+            document.getElementById(i + 1).style.display = 'none';
+        for (let i = 12; i < 22; i++)
+            document.getElementById(i).style.display = 'none';
+    } else {
+        //show the element
+        for (let i = 0; i < 10; i++) 
+            document.getElementById(i + 1).style.display = 'flex';
+        for (let i = 12; i < 22; i++)
+            document.getElementById(i).style.display = 'flex';
+    }
+    
 }

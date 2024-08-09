@@ -104,6 +104,8 @@ body {
 }
 
 .box img {
+    display: block;
+    margin: 0 auto; /* Centra l'immagine orizzontalmente */
     max-width: 50px; /* Adjusted to fit the box properly */
     height: auto;
 }
@@ -114,11 +116,21 @@ body {
 }
 
 .box-title {
+    display: flex;
+    justify-content: space-between; /* Distribuisce lo spazio tra il testo e l'icona */
+    align-items: center; /* Allinea verticalmente il testo e l'icona */
     font-size: 13px;
-    text-align: left;
     font-weight: bold;
     margin-top: 5px;
     margin-left: 5px;
+}
+
+.icon-right {
+    margin-left: auto; /* Forza l'icona a spostarsi verso destra */
+    justify-content: flex-end; /* Allinea gli elementi al margine destro */
+    font-size: 18px; /* Dimensione dell'icona, puoi modificarla */
+    color: blue;
+    cursor: pointer;
 }
 
 .content-row {
@@ -135,30 +147,23 @@ body {
     width: 100%;
     padding: 10px;
     display: flex;
-    gap: 10px; /* Spazio tra icona e testo */
     justify-content: center;
     align-items: center;
     position: relative; /* Aggiungi questa linea se non è già presente */
 }
 
-.header-left {
-    flex: 1; /* Occupare lo spazio disponibile a sinistra */
-}
-
-.header-right {
-    z-index: 200;
-    display: flex;
-    justify-content: center; /* Centra l'icona orizzontalmente */
-    align-items: center; /* Centra l'icona verticalmente */
+.header-content {
     gap: 10px; /* Spazio tra icona e testo */
-    position: absolute; /* Assicura che sia posizionato in modo preciso */
-    right: 50%; /* Sposta il div a sinistra del 50% della larghezza totale */
-    transform: translateX(50%); /* Riporta il div al centro */
+    align-items: center; /* Centra verticalmente il contenuto centrale */
+    display: flex;
+    justify-content: center; /* Centra il contenuto */
+    flex-grow: 1; /* Permette alla sezione centrale di espandersi e occupare spazio */
 }
 
 .team-icon {
     width: 100px; /* Regola la dimensione dell'icona come necessario */
     height: auto;
+    margin-left: 20px; /* Spazio tra l'icona e il contenuto centrale (se necessario) */
 }
 
 .location-info {
@@ -203,7 +208,6 @@ body {
 .intro-text {
     padding-right: 20px;
     padding-left: 20px;
-    margin-bottom: 4px; /* Spazio tra il testo e i blocchi */
     text-align: center; /* Centra il testo */
 }
 
@@ -217,6 +221,7 @@ body {
 }
 
 .intro-text p {
+    padding-bottom: 0px !important;
     max-width: 520px;
     font-size: 11px; /* Dimensione del testo descrittivo */
     color: #555; /* Colore del testo descrittivo */
