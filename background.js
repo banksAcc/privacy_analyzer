@@ -1,5 +1,4 @@
 // background.js
-
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.type === "extractText") {
         mockApiCall({ sending_page_text: message.content })
