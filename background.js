@@ -59,19 +59,19 @@ function mockApiCall(data) {
                         code: 1,
                         type: "First Party Collection/Use",
                         LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
-                        LMM_rank: 1
+                        LMM_rank: 2
                     },
                     {
                         code: 2,
                         type: "Third Party Sharing/Collection",
                         LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
-                        LMM_rank: 2
+                        LMM_rank: 3
                     },
                     {
                         code: 3,
                         type: "User Choice/Control",
                         LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
-                        LMM_rank: 3
+                        LMM_rank: 2
                     },
                     {
                         code: 4,
@@ -83,25 +83,25 @@ function mockApiCall(data) {
                         code: 5,
                         type: "Data Retention",
                         LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
-                        LMM_rank: 2
+                        LMM_rank: 4
                     },
                     {
                         code: 6,
                         type: "Data Security",
                         LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
-                        LMM_rank: 3
+                        LMM_rank: 4
                     },
                     {
                         code: 7,
                         type: "Policy Change",
                         LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
-                        LMM_rank: 1
+                        LMM_rank: 2
                     },
                     {
                         code: 8,
                         type: "Do Not Track",
                         LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
-                        LMM_rank: 2
+                        LMM_rank: 1
                     },
                     {
                         code: 9,
@@ -113,7 +113,7 @@ function mockApiCall(data) {
                         code: 10,
                         type: "Other",
                         LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
-                        LMM_rank: 0
+                        LMM_rank: 3
                     }
                 ]
             });

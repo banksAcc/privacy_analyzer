@@ -7,11 +7,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const pieChart = document.getElementById('pie-chart');
 
     // Ottieni l'URL della pagina corrente
-    chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         let currentPageUrl = tabs[0].url;
 
         // Recupera la lista di dati salvata
-        chrome.storage.local.get('processedDataList', function(result) {
+        chrome.storage.local.get('processedDataList', function (result) {
             //let outputDiv = document.getElementById('output');
             let processedDataList = result.processedDataList || [];
 
@@ -26,11 +26,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     let currentPageUrl = tabs[0].url;
                     try {
                         chrome.runtime.sendMessage({
-                        type: "extractText",
-                        content: response.content,
+                            type: "extractText",
+                            content: response.content,
                             url: currentPageUrl // Ottieni l'URL della scheda corrente
-                        },function (response) {
-                        // Richiesta di estrazione completata, ora possiamo aggiornare le icone
+                        }, function (response) {
+                            // Richiesta di estrazione completata, ora possiamo aggiornare le icone
                             if (response && response.success && response.data) {
                                 updateIconBasedOnGeneralCat(response.data);
                             } else {
@@ -50,10 +50,10 @@ document.addEventListener('DOMContentLoaded', () => {
         var menu = document.getElementById('fanMenu');
         menu.classList.toggle('show');
     });
-    
+
     //logica per scaricare il file json
     jsonButton.addEventListener('click', () => {
-        chrome.storage.local.get('processedDataList', function(result) {
+        chrome.storage.local.get('processedDataList', function (result) {
             if (result.processedDataList && result.processedDataList.length > 0) {
                 let dataStr = JSON.stringify(result.processedDataList, null, 2);
                 let blob = new Blob([dataStr], { type: 'application/json' });
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
     });
-    
+
     //mostriamo link alla pagina about us
     teamLink.addEventListener('click', (event) => {
         event.preventDefault();
@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', () => {
         blocksToModifyVisibility.forEach(block => {
             // Ottieni lo stile computato dell'elemento
             currentDisplay = window.getComputedStyle(block).display;
-            
+
             // Alterna la visibilità
             if (currentDisplay === 'none') {
                 block.style.display = 'block'; // Mostra l'elemento
@@ -97,13 +97,13 @@ document.addEventListener('DOMContentLoaded', () => {
         if (currentDisplay == 'none')
             document.getElementById("pie-chart").style.display = "block";
         else
-        document.getElementById("pie-chart").style.display = "none";
-            
+            document.getElementById("pie-chart").style.display = "none";
+
         // Ottieni l'URL della pagina corrente
-        chrome.tabs.query({ active: true, currentWindow: true }, function(tabs) {
+        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
             let currentPageUrl = tabs[0].url;
-        
-            getCurretPageData(currentPageUrl, function(output) {
+
+            getCurretPageData(currentPageUrl, function (output) {
                 if (output) {
                     if (document.getElementById(25).innerText == output.data.LLM_output_short) {
                         document.getElementById(25).innerText = output.data.LLM_output_long;
@@ -122,9 +122,9 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Aggiungi il listener per il pulsante di pulizia
-    clearButton.addEventListener('click', function() {
+    clearButton.addEventListener('click', function () {
         // Cancella i dati memorizzati nel browser
-        chrome.storage.local.remove('processedDataList', function() {
+        chrome.storage.local.remove('processedDataList', function () {
             //document.getElementById('output').innerText = 'Dati cancellati.';
             console.log("Dati cancellati dalla memoria locale.");
             // Chiudi il popup dell'estensione
@@ -142,41 +142,56 @@ document.addEventListener('DOMContentLoaded', () => {
             pieChart.classList.add('fa-comments');
             pieChart.classList.remove('fa-chart-pie');
             hideDisplayBlockInfoForPie(true);
-            // Dati di esempio
-            const data = [10, 20, 30];
-            const backgroundColors = ['#FF6384', '#36A2EB', '#FFCE56'];
-        
-            for (let i = 30; i <= 39; i++) {
-                const ctx = document.getElementById(i.toString()).getContext('2d');
-                new Chart(ctx, {
-                    type: 'pie',
-                    data: {
-                        labels: ['Category 1', 'Category 2', 'Category 3'],
-                        datasets: [{
-                            label: 'My Pie Chart',
-                            data: data,
-                            backgroundColor: backgroundColors,
-                            borderColor: ['#FFFFFF', '#FFFFFF', '#FFFFFF'],
-                            borderWidth: 1
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                display: false // Disabilita la legenda
+
+            chrome.storage.local.get('processedDataList', function (result) {
+                if (result.processedDataList && result.processedDataList.length > 0) {
+                    const processedDataList = result.processedDataList;
+
+                    for (let i = 30; i <= 39; i++) {
+
+                        const chartData = getDataForChart(i-29, processedDataList);
+
+                        const ctx = document.getElementById(i.toString()).getContext('2d');
+
+                        const pieChart = new Chart(ctx, {
+                            type: 'pie',
+                            data: {
+                                labels: chartData.labels,
+                                datasets: [{
+                                    data: chartData.data,
+                                    backgroundColor: chartData.backgroundColors,
+                                    borderColor: ['#FFFFFF', '#FFFFFF', '#FFFFFF'],
+                                    borderWidth: 1
+                                }]
                             },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(tooltipItem) {
-                                        return `${tooltipItem.label}: ${tooltipItem.raw}`;
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: {
+                                        display: false // Disabilita la legenda
+                                    },
+                                    tooltip: {
+                                        callbacks: {
+                                            label: function (tooltipItem) {
+                                                return `${tooltipItem.label}: ${tooltipItem.raw}`;
+                                            }
+                                        }
                                     }
                                 }
                             }
-                        }
+                        });
+                        // Ottieni l'URL della pagina corrente
+                        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+                            let currentPageUrl = tabs[0].url;
+
+                            // Supponendo che tu abbia già creato il grafico `myPieChart`
+                            highlightChartSlice(currentPageUrl, processedDataList, pieChart, i - 29);
+                        });
                     }
-                });
-            }
+                } else {
+                    console.log('Nessun dato disponibile nella cache.');
+                }
+            });
 
         } else {
             pieChart.setAttribute('type', 'showPie');
@@ -184,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
             pieChart.classList.remove('fa-comments');
             hideDisplayBlockInfoForPie(false);
         }
-    });    
+    });
 });
 
 function updateIconBasedOnGeneralCat(data) {
@@ -192,23 +207,23 @@ function updateIconBasedOnGeneralCat(data) {
     for (let i = 0; i < 10; i++) {
         switch (data.specific_cat_10[i].LMM_rank) {
             case 1:
-                document.getElementById(i+1).src = '../rank_icons/one_to_three/good_01.jpg';
+                document.getElementById(i + 1).src = '../rank_icons/one_to_three/good_01.jpg';
                 break;
             case 2:
-                document.getElementById(i+1).src = '../rank_icons/one_to_three/neutral_02.jpg';
+                document.getElementById(i + 1).src = '../rank_icons/one_to_three/neutral_02.jpg';
                 break;
             case 3:
-                document.getElementById(i+1).src  = '../rank_icons/one_to_three/bad_03.jpg';
-                break;  
+                document.getElementById(i + 1).src = '../rank_icons/one_to_three/bad_03.jpg';
+                break;
             default:
-                document.getElementById(i+1).src  = '../rank_icons/one_to_three/no_info.jpg'; // Default icon
+                document.getElementById(i + 1).src = '../rank_icons/one_to_three/no_info.jpg'; // Default icon
                 break;
         }
     }
 
     for (let i = 12; i < 22; i++) {
 
-        document.getElementById(i).innerText = data.specific_cat_10[i-12].LMM_output
+        document.getElementById(i).innerText = data.specific_cat_10[i - 12].LMM_output
 
     }
 
@@ -217,7 +232,7 @@ function updateIconBasedOnGeneralCat(data) {
         block.style.display = 'none';
     });
 
-    switch ( data.general_cat_5) {
+    switch (data.general_cat_5) {
         case 1:
             document.getElementById(11).src = '../rank_icons/one_to_five/classA_01.jpg';
             break;
@@ -232,9 +247,9 @@ function updateIconBasedOnGeneralCat(data) {
             break;
         case 5:
             document.getElementById(11).src = '../rank_icons/one_to_five/classE_05.jpg';
-            break;   
+            break;
         default:
-            document.getElementById(11).src= '../rank_icons/one_to_five/classNo.jpg'; // Default icon
+            document.getElementById(11).src = '../rank_icons/one_to_five/classNo.jpg'; // Default icon
             break;
     }
     const blocksToModifyVisibility = document.querySelectorAll('.container'); // Seleziona gli elementi da nascondere
@@ -274,7 +289,7 @@ function getCurretPageData(currentPageUrl, callback) {
 function hideDisplayBlockInfoForPie(hide) {
     if (hide) {
         //hide the element
-        for (let i = 0; i < 10; i++) 
+        for (let i = 0; i < 10; i++)
             document.getElementById(i + 1).style.display = 'none';
         for (let i = 12; i < 22; i++)
             document.getElementById(i).style.display = 'none';
@@ -286,7 +301,7 @@ function hideDisplayBlockInfoForPie(hide) {
 
     } else {
         //show the element
-        for (let i = 0; i < 10; i++) 
+        for (let i = 0; i < 10; i++)
             document.getElementById(i + 1).style.display = 'flex';
         for (let i = 12; i < 22; i++)
             document.getElementById(i).style.display = 'flex';
@@ -297,5 +312,100 @@ function hideDisplayBlockInfoForPie(hide) {
         });
 
     }
-    
+
+}
+
+// Funzione per estrarre e preparare i dati per il grafico
+function getDataForChart(code, processedDataList) {
+    let counts = {
+        rank1: 0,
+        rank2: 0,
+        rank3: 0,
+        outOfRange: 0
+    };
+
+    let labels = ['Good', 'Neutral', 'Bad', 'No Data'];
+
+    // Conta le occorrenze di ciascun LMM_rank per lo specifico 'code'
+    processedDataList.forEach(item => {
+        const specificData = item.data.specific_cat_10.find(cat => cat.code === code);
+        if (specificData) {
+            if (specificData.LMM_rank === 1) {
+                counts.rank1++;
+            } else if (specificData.LMM_rank === 2) {
+                counts.rank2++;
+            } else if (specificData.LMM_rank === 3) {
+                counts.rank3++;
+            } else {
+                counts.outOfRange++;
+            }
+        }
+    });
+
+    // Calcola il totale delle occorrenze
+    const total = counts.rank1 + counts.rank2 + counts.rank3 + counts.outOfRange;
+
+    // Prepara i dati per il grafico a torta
+    const data = [
+        ((counts.rank1 / total) * 100).toFixed(0),
+        ((counts.rank2 / total) * 100).toFixed(0),
+        ((counts.rank3 / total) * 100).toFixed(0),
+        ((counts.outOfRange / total) * 100).toFixed(0)
+    ];
+
+    const backgroundColors = ['#75B34F', '#979797', '#cf6420', '#c13934'];
+
+    return { data, labels, backgroundColors };
+}
+
+function highlightChartSlice(pageUrl, processedDataList, chart, code) {
+
+    let spicificData;
+    // Trova l'oggetto che corrisponde all'URL della pagina
+    const dataItem = processedDataList.find(item => item.url === pageUrl);
+
+    if (dataItem) {
+        // Cerca il tipo nella lista specific_cat_10 usando il code
+        const category = dataItem.data.specific_cat_10.find(cat => cat.code === code);
+        if (category) {
+            spicificData = category;
+
+        } else {
+            console.log('Codice non trovato nella lista specific_cat_10 per l\'URL dato.');
+            return; // Esci dalla funzione se il codice non è trovato
+        }
+    } else {
+        console.log('URL non trovato nella lista dei dati elaborati.');
+        return; // Esci dalla funzione se l'URL non è trovato
+    }
+
+    // Step 2: Confronta con i dati del grafico e trova l'indice corrispondente
+    let label;
+
+    switch (spicificData.LMM_rank) {
+        case 1:
+            label = 'Good'
+            break;
+        case 2:
+            label = 'Neutral'
+            break;
+        case 3:
+            label = 'Bad'
+            break;
+        default:
+            label = 'No Data'
+    };
+
+    const sliceIndex = chart.data.labels.indexOf(label);
+
+    if (sliceIndex !== -1) {
+        // Step 3: Evidenzia lo spicchio modificando il colore del bordo
+        chart.data.datasets[0].borderColor[sliceIndex] = '#000000'; // Imposta il colore del bordo a nero
+        chart.data.datasets[0].borderWidth[sliceIndex] = 5; // Imposta lo spessore del bordo a 5
+
+        // Aggiorna il grafico per riflettere le modifiche
+        chart.update();
+    } else {
+        console.log('Tipo di dato non trovato nel grafico.');
+    }
 }
