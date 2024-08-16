@@ -1,0 +1,39 @@
+Da fare Insieme:
+creare 3 dataset di 3/4 max 5 sorgenti dato dai 115 testi sorgenti. Selezionare dei dati
+sui cui testare il modello e aggiungere nel git queste 3 pagine HTML che l'esensione deve
+poter analizzare.
+
+Iniziare a strutturare la relazione (word o altro anche HTML), in funzione del lavoro svolto penserei 
+
+1. Obiettivi del progetto
+    1.1 Cosa vogliamo realizzare idealmente
+    1.2 Stack tecnologico per l'estensione e per il modello LLM
+    1.4 Hardware necessario per i modelli LLM, ideale e reale
+
+2 Creazione del modello custom partendo da un modello ollama
+    2.1 Criteri di scelta del modello
+    2.2 Studio tecniche di prompt engeneering e scelta di tenciche da testare
+    2.3 Test e Analisi risulati ottenuti
+
+3 Creazione Estensione
+    3.1 Analisi Funzionalità
+    3.2 Sviluppo
+    3.3 Collegamneto con il modello LLM
+
+4 Analisi dei risulati
+    4.1 Analisi dei risulati ottenuti
+    4.2 Analsi delle limitazioni ed eventuali/reali problemi
+    4.3 Possibili sviluppi e modifiche per risolvere i problemi
+
+Ida:
+vedi il file LMM/promt.md, c'è una piccola spiegazione di quello che c'è nella cartella.
+Una cosa utile sarebbe approfondire le 3 tenciche di prompt selezionate (https://www.promptingguide.ai/it/techniques/)
+seguendo un pò il pattern: cosa fa, obiettivi, come farla. Io ho selezionato queste 3
+ma è possibile scelgiene e approfnodirne altre. Attenzione, il prof ha detto di andare vedere
+da introduzione fino a Retrieval Augmented Generation delle tecniche.
+
+Verificare se sul tuo pc gira un modello più performate:
+1. modifica il model file e crea un modello sulla base di lliama3 (seguire guida che ti ho mandato su teams)
+2. verifica tramite API quanto ci mette a rispondare ad un testo di privacy
+3. se più di 3/4 minuti, prova con il modelle gemma2:2b
+4. scegliamo su quale hardaware far gira il tutto
