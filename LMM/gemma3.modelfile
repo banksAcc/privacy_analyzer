@@ -94,3 +94,4 @@ The calculation of LMM_output and LMM_rank must be done in the context of the co
 PARAMETER stop <start_of_turn>
 PARAMETER stop <end_of_turn>
 PARAMETER temperature 0.7
+PARAMETER mirostat_eta 0.1
