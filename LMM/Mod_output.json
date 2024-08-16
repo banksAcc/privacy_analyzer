@@ -1,0 +1,70 @@
+{
+    "processing_time": "tempo di elaborazione in secondi.",
+    "output_date_time" : "formato ISO 8601 ovv: YYYY-MM-DDTHH:MM:SS",
+    "sent_page_text": "il testo della pagina inviato all'LLM.",
+    "LLM_output_short": "output breve, 250 caratteri, se vuoto, elaborazione non possibil.",
+    "LLM_output_long": "output completo 2500 caratteri compresi spazi punti etc.",
+    "general_cat_5": "punteggio complessivo da 1 a 5, 1 buono, 5 no buono. Definisce come il sito gestisce la privacy, se questo valore è fuori dal range allora non è stato possibile analizzare i dati",
+    "specific_cat_10": [
+        {
+            "code" : 1,
+            "type" : "First Party Collection/Use",
+            "LMM_output" : "Descrizione di 150 caratteri",
+            "LMM_rank": "Numero da 1 a 3,dove 1 buono 3 no buono. Voti fuori dal ranage definiscono che non è stato possibile dedurre un dato per questo indicatore."
+        },
+        {
+            "code" : 2,
+            "type" : "Third Party Sharing/Collection",
+            "LMM_output" : "Descrizione di 150 caratteri",
+            "LMM_rank": "Numero da 1 a 3,dove 1 buono 3 no buono. Voti fuori dal ranage definiscono che non è stato possibile dedurre un dato per questo indicatore."
+        },
+        {
+            "code" : 3,
+            "type" : "User Choice/Control",
+            "LMM_output" : "Descrizione di 150 caratteri",
+            "LMM_rank": "Numero da 1 a 3,dove 1 buono 3 no buono. Voti fuori dal ranage definiscono che non è stato possibile dedurre un dato per questo indicatore."
+        },
+        {
+            "code" : 4,
+            "type" : "User Access, Edit, & Deletion",
+            "LMM_output" : "Descrizione di 150 caratteri",
+            "LMM_rank": "Numero da 1 a 3,dove 1 buono 3 no buono. Voti fuori dal ranage definiscono che non è stato possibile dedurre un dato per questo indicatore."
+        },
+        {
+            "code" : 5,
+            "type" : "Data Retention",
+            "LMM_output" : "Descrizione di 150 caratteri",
+            "LMM_rank": "Numero da 1 a 3,dove 1 buono 3 no buono. Voti fuori dal ranage definiscono che non è stato possibile dedurre un dato per questo indicatore."
+        },
+        {
+            "code" : 6,
+            "type" : "Data Security",
+            "LMM_output" : "Descrizione di 150 caratteri",
+            "LMM_rank": "Numero da 1 a 3,dove 1 buono 3 no buono. Voti fuori dal ranage definiscono che non è stato possibile dedurre un dato per questo indicatore."
+        },
+        {
+            "code" : 7,
+            "type" : "Policy Change",
+            "LMM_output" : "Descrizione di 150 caratteri",
+            "LMM_rank": "Numero da 1 a 3,dove 1 buono 3 no buono. Voti fuori dal ranage definiscono che non è stato possibile dedurre un dato per questo indicatore."
+        },
+        {
+            "code" : 8,
+            "type" : "Do Not Track",
+            "LMM_output" : "Descrizione di 150 caratteri",
+            "LMM_rank": "Numero da 1 a 3,dove 1 buono 3 no buono. Voti fuori dal ranage definiscono che non è stato possibile dedurre un dato per questo indicatore."
+        },
+        {
+            "code" : 9,
+            "type" : "International & Specific Audiences",
+            "LMM_output" : "Descrizione di 150 caratteri",
+            "LMM_rank": "Numero da 1 a 3,dove 1 buono 3 no buono. Voti fuori dal ranage definiscono che non è stato possibile dedurre un dato per questo indicatore."
+        },
+        {
+            "code" : 10,
+            "type" : "Other",
+            "LMM_output" : "Descrizione di 150 caratteri",
+            "LMM_rank": "Numero da 1 a 3,dove 1 buono 3 no buono. Voti fuori dal ranage definiscono che non è stato possibile dedurre un dato per questo indicatore."
+        }
+    ]
+}
