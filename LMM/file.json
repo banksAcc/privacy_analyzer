@@ -1,0 +1,56 @@
+{
+    "LLM_output_long":"Our service emphasizes protecting user privacy by collecting necessary data to deliver and improve our offerings. This might involve direct input from users during account creation and automatically collected information like device and usage logs. We share your information with third parties for service, legal compliance, or after obtaining consent. However, certain details are also used by these parties for analytics and advertising purposes. You hold control over your data including opting-out of marketing materials, restricting sharing choices, and disabling cookies through your account settings or device. Accessing, editing, or deleting this information is accessible via your account login or contacting support. Certain data remains retained based on legal requirements for operations.  We implement standard security protocols for protection (e.g., encryption, access control). Periodic updates of our policy happen to reflect any significant changes and be communicated through various means like email, app notifications, or website notices. This demonstrates a dedication to transparency. Additionally, we uphold Do Not Track signal expectations and offer options to opt-out of tracking for online marketing and advertising when possible.  We adhere to regulations depending on user group (e.g., children, European residents, and California). Any queries concerning data usage or the policy can be addressed via our contact information provided. Our commitment lies in addressing your privacy concerns ",
+    "general_cat_5":3,
+    "specific_cat_10":[
+       {
+          "code":1,
+          "LMM_output":"This Privacy Policy clarifies the collection and processing of user data to maintain service and improve experience. This data includes both user-submitted information like account creation data and automatically generated information such as device or usage details.",
+          "LMM_rank":2
+       },
+       {
+          "code":2,
+          "LMM_output":"User Data Sharing for service provision and compliance with laws and regulations.",
+          "LMM_rank":1
+       },
+       {
+          "code":3,
+          "LMM_output":"The user holds control over their information and can choose to limit sharing and restrict use of cookies or marketing opt-outs in their settings. ",
+          "LMM_rank":2
+       },
+       {
+          "code":4,
+          "LMM_output":"Storage is managed based on legal needs for operation. For some data, retention might occur.",
+          "LMM_rank":2
+       },
+       {
+          "code":5,
+          "LMM_output":"Standard security measures such as encryption and access control ensure that user information remains secure, but complete protection against all security vulnerabilities isn’t attainable",
+          "LMM_rank":2
+       },
+       {
+          "code":6,
+          "LMM_output":"Changes in privacy policy happen periodically, communicated through appropriate channels to the users and accepting these changes constitutes their continued use of our services.",
+          "LMM_rank":1
+       },
+       {
+          "code":7,
+          "LMM_output":"We adhere to Do Not Track signal settings while respecting user's decision regarding online tracking or targeted advertising through opting-out procedures for these cases.",
+          "LMM_rank":2
+       },
+       {
+          "code":8,
+          "LMM_output":"Specific data collection guidelines for children, European residents, or California users. Compliance with relevant regulations and standards like CCPA (California Consumer Privacy Act).",
+          "LMM_rank":1
+       },
+       {
+          "code":9,
+          "LMM_output":"Contact details to obtain further assistance regarding this privacy policy.",
+          "LMM_rank":2
+       },
+       {
+          "code":10,
+          "LMM_output":"Detailed information on the types of data we process and how they are used is presented. We provide options for users to opt-out of certain tracking or data processing methods.",
+          "LMM_rank":2
+       }
+    ]
+ }
