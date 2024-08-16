@@ -116,6 +116,6 @@ function mockApiCall(data) {
                     }
                 ]
             });
-        }, 1000); // Simula un ritardo di 1 secondo
+        }, 10000); // Simula un ritardo di 10 secondo
     });
 }
