@@ -1,0 +1,108 @@
+{
+	"info": {
+		"_postman_id": "5d5ec16f-f513-485e-803a-75e7aa3e5f03",
+		"name": "LLM API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31329511"
+	},
+	"item": [
+		{
+			"name": "generate",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"model\": \"gemma2:2b\",\r\n  \"prompt\": \"respond\",\r\n  \"stream\": false,\r\n    \"options\": {\r\n    \"temperature\": 2\r\n  },\r\n\"format\": \"json\",\r\n\"keep_alive\":100000\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}generate",
+					"host": [
+						"{{url}}generate"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "show",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"gemma2:2b\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}show",
+					"host": [
+						"{{url}}show"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "pull",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"name\": \"gemma2:2b\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}pull",
+					"host": [
+						"{{url}}pull"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "http://localhost:11434/api/",
+			"type": "string"
+		}
+	]
+}
