@@ -3,9 +3,9 @@ Di seguito diversi approcci di che è possibile approfondire e utilizzare per il
 
 Il modello che utilizziamo è basato sul modello gemma2 di ollama. Di seguito alcune caratteristiche da sorgete Ollama:
 
-| Gemma 2            | 2B         | 1.6GB | `ollama run gemma2:2b`         |
-| Gemma 2            | 9B         | 5.5GB | `ollama run gemma2`            |
-| Gemma 2            | 27B        | 16GB  | `ollama run gemma2:27b`        |
+ Gemma 2            | 2B         | 1.6GB | `ollama run gemma2:2b`         
+ Gemma 2            | 9B         | 5.5GB | `ollama run gemma2`            
+ Gemma 2            | 27B        | 16GB  | `ollama run gemma2:27b`        
 
 Nello specifico lavoriamo con il modello più leggero possibile, il 2B, con il model file in LMM/gemma3.modelfile.
 
