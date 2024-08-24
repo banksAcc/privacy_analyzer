@@ -15,6 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const fewShot = document.getElementById('training1');
     const chaining = document.getElementById('training2');
     const rag = document.getElementById('training3');
+ 
 
     // Ottieni l'URL della pagina corrente
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {

@@ -35,7 +35,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 });
             })
             .catch(error => {
-                console.error('Errore nella chiamata mock:', error);
+                console.error('Errore nella chiamata mock', error);
                 sendResponse({ success: false, error: error });
             });
         // Indica che risponderai in modo asincrono
@@ -93,7 +93,7 @@ function elaborateOutput(data, inputText) {
 
     } catch (error) {
         // Gestisci eventuali errori nella conversione JSON
-        console.error('Errore nella conversione in JSON:', error);
+        console.error('Errore nella conversione in JSON', error);
         return null; // O restituisci un valore di errore specifico se preferisci
     }
 
@@ -126,7 +126,7 @@ async function ApiCall_1(data) {
         const result = await response.json();
         return result;
     } catch (error) {
-        console.error('Errore nella chiamata API:', error.message);
+        console.error('Errore nella chiamata API', error.message);
         throw error;  // Rifiuta la promessa in caso di errore
     }
 }
