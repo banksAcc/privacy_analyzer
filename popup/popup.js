@@ -34,6 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateIconBasedOnGeneralCat(currentPageData.data);
             } else {
                 updateIconPageNotEvaluated();
+
                 /*
                 chrome.tabs.sendMessage(tabs[0].id, { action: "getContent" }, function (response) {
                     let currentPageUrl = tabs[0].url;
@@ -115,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.getElementById("pie-chart").style.display = "none";
 
         // Ottieni l'URL della pagina corrente
-        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+        browser.tabs.query({ active: true, currentWindow: true }, function (tabs) {
             let currentPageUrl = tabs[0].url;
 
             getCurretPageData(currentPageUrl, function (output) {
@@ -139,7 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // In ascolto sul click per pulizia della cache
     clearButton.addEventListener('click', function () {
         // Cancella i dati memorizzati nel browser
-        chrome.storage.local.remove('processedDataList', function () {
+        browser.storage.local.remove('processedDataList', function () {
             //document.getElementById('output').innerText = 'Dati cancellati.';
             console.log("Dati cancellati dalla memoria locale.");
             // Chiudi il popup dell'estensione
@@ -157,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
             pieChart.classList.remove('fa-chart-pie');
             hideDisplayBlockInfoForPie(true);
 
-            chrome.storage.local.get('processedDataList', function (result) {
+            browser.storage.local.get('processedDataList', function (result) {
                 if (result.processedDataList && result.processedDataList.length > 0) {
                     const processedDataList = result.processedDataList;
 
@@ -201,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         });
 
                         // Ottieni l'URL della pagina corrente
-                        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+                        browser.tabs.query({ active: true, currentWindow: true }, function (tabs) {
                             let currentPageUrl = tabs[0].url;
 
                             // Evidenzia lo spicchio corrispondente
@@ -260,6 +261,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Aggiorna i dati degli elementi in funzione della valutazione della pagina
 function updateIconBasedOnGeneralCat(data) {
+    
     console.log(data);
 
     for (let i = 0; i < 10; i++) {
