@@ -44,26 +44,91 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 async function ApiCall(data) {
-    try {
-        const result = await sendMessage('callApi', data);
-        return elaborateOutput(result, data.sending_page_text);
-    } catch (error) {
-        console.log('Errore:', error.message);
-    }
+    const result = await ApiCall_1(data);
+    return elaborateOutput(result.response, data.sending_page_text);
 }
 
-function sendMessage(command, data) {
-    return new Promise((resolve, reject) => {
-        chrome.runtime.sendMessage({ command, data }, (response) => {
-            if (chrome.runtime.lastError) {
-                reject(chrome.runtime.lastError);
-            } else if (response.status === 'success') {
-                resolve(response.result);
-            } else {
-                reject(new Error(response.message));
-            }
+function elaborateOutput(data, inputText) { 
+    // Mappatura dei tipi basati sui codici
+    const typeMapping = {
+        1: "First Party Collection/Use",
+        2: "Third Party Sharing/Collection",
+        3: "User Choice/Control",
+        4: "User Access, Edit, & Deletion",
+        5: "Data Retention",
+        6: "Data Security",
+        7: "Policy Change",
+        8: "Do Not Track",
+        9: "International & Specific Audiences",
+        10: "Other"
+    };
+
+    try {
+        // 1. Rimuovi i caratteri di a capo e gli escape
+        // Usa il metodo replace per rimuovere \n e \\
+        const cleanedData = data
+            .replace(/\\n/g, '')  // Rimuove i caratteri di a capo \n
+            .replace(/\\(.)/g, '$1'); // Rimuove gli escape \
+
+        // 2. Converte la stringa in JSON
+        const jsonData = JSON.parse(cleanedData);
+        
+        // Composizione del JSON finale
+        const finalJson = {
+            processing_time: "",
+            output_date_time: "",
+            sent_page_text: inputText,
+            LLM_output_short: jsonData.LLM_output_long.slice(0, 250),
+            LLM_output_long: jsonData.LLM_output_long,
+            general_cat_5: jsonData.general_cat_5,
+            specific_cat_10: jsonData.specific_cat_10.map(item => ({
+                code: item.code,
+                type: typeMapping[item.code] || "Unknown",
+                LMM_output: item.LMM_output,
+                LMM_rank: item.LMM_rank
+            }))
+        };
+
+        return finalJson;
+
+    } catch (error) {
+        // Gestisci eventuali errori nella conversione JSON
+        console.error('Errore nella conversione in JSON:', error);
+        return null; // O restituisci un valore di errore specifico se preferisci
+    }
+
+}
+
+async function ApiCall_1(data) {
+    try {
+        const response = await fetch('http://localhost:11434/api/generate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                model: 'new-gem',
+                prompt: data.sending_page_text,
+                stream: false,
+                options: {
+                    temperature: 2
+                },
+                format: 'json',
+                keep_alive: 100000
+            })
         });
-    });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Network response was not ok: ${errorText}`);
+        }
+
+        const result = await response.json();
+        return result;
+    } catch (error) {
+        console.error('Errore nella chiamata API:', error.message);
+        throw error;  // Rifiuta la promessa in caso di errore
+    }
 }
 
 function mockApiCall(data) {
@@ -141,55 +206,4 @@ function mockApiCall(data) {
             });
         }, 10000); // Simula un ritardo di 10 secondo
     });
-}
-
-function elaborateOutput(data, inputText) { 
-    // Mappatura dei tipi basati sui codici
-    const typeMapping = {
-        1: "First Party Collection/Use",
-        2: "Third Party Sharing/Collection",
-        3: "User Choice/Control",
-        4: "User Access, Edit, & Deletion",
-        5: "Data Retention",
-        6: "Data Security",
-        7: "Policy Change",
-        8: "Do Not Track",
-        9: "International & Specific Audiences",
-        10: "Other"
-    };
-
-    try {
-        // 1. Rimuovi i caratteri di a capo e gli escape
-        // Usa il metodo replace per rimuovere \n e \\
-        const cleanedData = data
-            .replace(/\\n/g, '')  // Rimuove i caratteri di a capo \n
-            .replace(/\\(.)/g, '$1'); // Rimuove gli escape \
-
-        // 2. Converte la stringa in JSON
-        const jsonData = JSON.parse(cleanedData);
-        
-        // Composizione del JSON finale
-        const finalJson = {
-            processing_time: "",
-            output_date_time: "",
-            sent_page_text: inputText,
-            LLM_output_short: jsonData.LLM_output_long.slice(0, 250),
-            LLM_output_long: jsonData.LLM_output_long,
-            general_cat_5: jsonData.general_cat_5,
-            specific_cat_10: jsonData.specific_cat_10.map(item => ({
-                code: item.code,
-                type: typeMapping[item.code] || "Unknown",
-                LMM_output: item.LMM_output,
-                LMM_rank: item.LMM_rank
-            }))
-        };
-
-        return finalJson;
-
-    } catch (error) {
-        // Gestisci eventuali errori nella conversione JSON
-        console.error('Errore nella conversione in JSON:', error);
-        return null; // O restituisci un valore di errore specifico se preferisci
-    }
-
 }

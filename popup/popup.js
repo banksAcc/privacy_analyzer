@@ -1,4 +1,4 @@
-import { train_FewShot, train_Chaining, train_RAG } from './training.js';
+import { train_FewShot, train_Chaining, train_RAG} from './training.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     
@@ -29,9 +29,11 @@ document.addEventListener('DOMContentLoaded', () => {
             let currentPageData = processedDataList.find(entry => entry.url === currentPageUrl);
 
             if (currentPageData) {
+                console.log(currentPageData.data);
                 updateIconBasedOnGeneralCat(currentPageData.data);
             } else {
                 updateIconPageNotEvaluated();
+                /*
                 chrome.tabs.sendMessage(tabs[0].id, { action: "getContent" }, function (response) {
                     let currentPageUrl = tabs[0].url;
                     try {
@@ -52,6 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         updateIconPageNotEvaluated();
                     }
                 });
+                */
             }
         });
     });
@@ -256,6 +259,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Aggiorna i dati degli elementi in funzione della valutazione della pagina
 function updateIconBasedOnGeneralCat(data) {
+    console.log(data);
 
     for (let i = 0; i < 10; i++) {
         switch (data.specific_cat_10[i].LMM_rank) {
@@ -325,7 +329,7 @@ function updateIconPageNotEvaluated() {
 
     document.getElementById("pie-chart").style.display = 'none';
     document.getElementById("moreText").style.display = 'none';
-    document.getElementById(11).src = '../rank_icons/one_to_five/classNo.jpg'; // Default icon
+    //document.getElementById(11).src = '../rank_icons/one_to_five/classNo.jpg'; // Default icon
     document.getElementById("loading-spinner").style.display = "block";
     document.getElementById(25).innerText = "The analysis did not give valid results. Reload the page or reopen the popup. If the problem persists, it may be a data problem on this page.";
 
@@ -341,7 +345,7 @@ function getCurretPageData(currentPageUrl, callback) {
     });
 }
 
-// Funzione che gestisce la visibilità de
+// Funzione che gestisce la visibilità degli elementi dei grafici
 function hideDisplayBlockInfoForPie(hide) {
     if (hide) {
         //hide the element

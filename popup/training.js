@@ -65,7 +65,7 @@ export async function train_RAG() {
     }
 }
 
-async function ApiCall(data) {
+export async function ApiCall(data) {
     return new Promise((resolve, reject) => {
         fetch('http://localhost:11434/api/generate', {
             method: 'POST',
@@ -94,17 +94,3 @@ async function ApiCall(data) {
     });
 }
 
-// Ascolta i messaggi dal background
-chrome.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-    if (message.command === 'callApi') {
-        try {
-            // Chiamata della funzione ApiCall e invio del risultato come risposta
-            const result = await ApiCall(message.data);
-            sendResponse({ status: 'success', result: result });
-        } catch (error) {
-            sendResponse({ status: 'error', message: error.message });
-        }
-    }
-    // Indica che la risposta sarà inviata in modo asincrono
-    return true;
-});

@@ -5,7 +5,7 @@
     "background": {
       "scripts": ["background.js"]
     },
-    
+
     "description": "Analyze the Privacy policy you are accepting by accessing a web page.",
     "icons":{
       "16": "icons/icon-16.png",
@@ -30,7 +30,9 @@
       "http://*/*",
       "https://*/*",
       "storage",
-      "webNavigation"
+      "webNavigation",
+      "http://localhost:11434/*" 
+      
     ],
 
     "content_scripts": [
