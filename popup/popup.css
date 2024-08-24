@@ -59,8 +59,8 @@ body {
     padding: 10px;
     box-sizing: border-box;
     font-size: 18px; /* Imposta la dimensione dell'icona */
-
 }
+
 .training-button {
     display: flex;
     align-items: center;

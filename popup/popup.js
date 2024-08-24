@@ -1,8 +1,6 @@
 import { Few_Shot, Chaining, RAG } from './training.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-
-    
     
     // Variabile globale per memorizzare i riferimenti ai grafici
     const charts = {};
@@ -219,21 +217,41 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // In ascolto sul click pulsante fewShot
     fewShot.addEventListener('click', async () => {
-        await Few_Shot();
-        
+        toggleSpinner(true);
+        try {
+            await Few_Shot(); // Chiama la funzione asincrona
+        } catch (error) {
+            console.error('Errore durante l\'esecuzione di trainModel1:', error);
+        } finally {
+            toggleSpinner(false);
+        }
     });
 
+    // In ascolto sul click pulsante chaining
     chaining.addEventListener('click', async () => {
-        
+        toggleSpinner(true);
+        try {
+            await Chaining(); // Chiama la funzione asincrona
+        } catch (error) {
+            console.error('Errore durante l\'esecuzione di trainModel1:', error);
+        } finally {
+            toggleSpinner(false);
+        } 
     });
 
+    // In ascolto sul click pulsante rag
     rag.addEventListener('click', async () => {
-        
+        toggleSpinner(true);
+        try {
+            await RAG(); // Chiama la funzione asincrona
+        } catch (error) {
+            console.error('Errore durante l\'esecuzione di trainModel1:', error);
+        } finally {
+            toggleSpinner(false);
+        }
     });
-
-
-
 });
 
 // Aggiorna i dati degli elementi in funzione della valutazione della pagina
@@ -395,6 +413,7 @@ function getDataForChart(code, processedDataList) {
 
     return { data, labels, backgroundColors };
 }
+
 // Funzione per evidenziare nei grafici le informazioni della pagina che si sta visitanto
 function highlightChartSlice(pageUrl, processedDataList, chart, code) {
 
@@ -446,4 +465,18 @@ function highlightChartSlice(pageUrl, processedDataList, chart, code) {
     } else {
         console.log('Tipo di dato non trovato nel grafico.');
     }
+}
+
+// Funzione per mosrare lo spinner durante la fase di condizionamento dell'LLM
+function toggleSpinner(show) {
+    const fewShot = document.getElementById('fewShot');
+    const chaining = document.getElementById('chaining');
+    const rag = document.getElementById('rag');
+
+    const spinner = document.getElementById('training-spinner');
+    spinner.style.display = show ? 'block' : 'none';
+
+    fewShot.style.display = show ? 'none' : 'flex';
+    chaining.style.display = show ? 'none' : 'flex';
+    rag.style.display = show ? 'none' : 'flex';
 }
