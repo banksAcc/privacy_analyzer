@@ -31,9 +31,9 @@ PARAMETER <parameter> <parametervalue> spicifichiamo alcuni parametri al fine di
 3. Per impostare questa tipologia di prompt si deve formire al modello uno o due esempi di estrazione di informazion da altre privacy policy e poi si chiede al modello di fare lo stesso per un nuovo testo.
 
 ## N.2 Prompt Chaining
-1. Descrizione del metodo
-2. Obiettivi
-3. How to...
+1. Il prompting chaining consiste nell'utilizzare più prompt in sequenza facendo in modo che l'output di un prompt diventi l'input per il successivo. Questo permette di suddividere un problema complesso in sotto-problemi gestibili.
+2. È bene usare questo modello per scomporre il processo in fasi gestibili migliorando la precisione e la coerenza del risultato finale. Inoltre usando questa tecnica è possibile automatizzare in modo efficace la classificazione delle privacy policy.
+3. Nel nostro caso abbiamo 3 prompt che rispettivamente consistono nell'estrarre le informazioni chiave sulle privacy policy, classificare le informazioni relative a queste e generare l'output finale.
 
 ## N.3 Retrieval Augmented Generation (RAG)
 1. Descrizione del metodo
