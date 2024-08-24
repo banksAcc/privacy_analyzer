@@ -23,9 +23,9 @@ PARAMETER <parameter> <parametervalue> spicifichiamo alcuni parametri al fine di
 3. temperature : vogliamo una risposta quanto più standard e non creativa nella struttura e mediamante creativa nei testi di riassunto.
 
 ## N.1 Prompt Few-Shot
-1. Descrizione del metodo
-2. Obiettivi
-3. How to...
+1. Questo metodo consiste nel fornire al modello vari esempi di come deve comportarsi quando gli viene chiesto di svolgere un compito. Questo aiuta il modello non solo a comprendere meglio il contesto ma anche a indirizzarlo verso il tipo di risposta desiderata.
+2. È bene usare questo modello se si ha bisogno di maggiore precisione e coerenza nelle risposte grazie agli esempi o anche nel caso in cui i tipi di informazioni nelle privacy policy sono strutturati in modi diversi o sono espressi in linguaggi differenti.
+3. Per impostare questa tipologia di prompt si deve formire al modello uno o due esempi di estrazione di informazion da altre privacy policy e poi si chiede al modello di fare lo stesso per un nuovo testo.
 
 ## N.2 Prompt Chaining
 1. Descrizione del metodo
