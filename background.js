@@ -1,7 +1,7 @@
 // background.js
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.type === "extractText") {
-        mockApiCall({ sending_page_text: message.content })
+        ApiCall({ sending_page_text: message.content })
             .then(data => {
                 // Ottieni l'URL della pagina corrente
                 let currentPageUrl = message.url || (sender.tab ? sender.tab.url : '');
@@ -43,16 +43,26 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     }
 });
 
-function ApiCall(data) {
-    chrome.runtime.sendMessage({
-        command: 'callApi',
-        data: data
-    }, (response) => {
-        if (response.status === 'success') {
-            return elaborateOutput(response.result, data.sending_page_text);
-        } else {
-            console.log('Errore:', response.message);
-        }
+async function ApiCall(data) {
+    try {
+        const result = await sendMessage('callApi', data);
+        return elaborateOutput(result, data.sending_page_text);
+    } catch (error) {
+        console.log('Errore:', error.message);
+    }
+}
+
+function sendMessage(command, data) {
+    return new Promise((resolve, reject) => {
+        chrome.runtime.sendMessage({ command, data }, (response) => {
+            if (chrome.runtime.lastError) {
+                reject(chrome.runtime.lastError);
+            } else if (response.status === 'success') {
+                resolve(response.result);
+            } else {
+                reject(new Error(response.message));
+            }
+        });
     });
 }
 
