@@ -1,5 +1,3 @@
-// popup/training.js
-
 // Vettore globale contenente i testi da inviare a ApiCall
 const Few_Shot = [
     "Promp1",
