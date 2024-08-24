@@ -44,34 +44,17 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
 });
 
 function ApiCall(data) {
-    return new Promise((resolve, reject) => {
-        fetch('http://localhost:11434/api/generate', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                model: "gemma2:2b",
-                prompt: data.sending_page_text,
-                stream: false,
-                options: {
-                    temperature: 2
-                },
-                format: "json",
-                keep_alive: 100000
-            })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => resolve(data))
-        .catch(error => reject(error));
+    chrome.runtime.sendMessage({
+        command: 'callApi',
+        data: data
+    }, (response) => {
+        if (response.status === 'success') {
+            return response.result;
+        } else {
+            console.log('Errore:', response.message);
+        }
     });
 }
-
 
 function mockApiCall(data) {
     return new Promise((resolve) => {

@@ -469,9 +469,9 @@ function highlightChartSlice(pageUrl, processedDataList, chart, code) {
 
 // Funzione per mosrare lo spinner durante la fase di condizionamento dell'LLM
 function toggleSpinner(show) {
-    const fewShot = document.getElementById('fewShot');
-    const chaining = document.getElementById('chaining');
-    const rag = document.getElementById('rag');
+    const fewShot = document.getElementById('training1');
+    const chaining = document.getElementById('training2');
+    const rag = document.getElementById('training3');
 
     const spinner = document.getElementById('training-spinner');
     spinner.style.display = show ? 'block' : 'none';
