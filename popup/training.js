@@ -3,7 +3,7 @@ const Few_Shot = [
     Expected result: 
     {
         "LLM_output_long": "We collect and share information to improve services. Users can manage preferences. We retain data until account deletion and protect information with encryption. Notifications of policy changes will be sent. We do not respond to Do Not Track.",
-        "general_cat_5": 2,
+        "general_cat_5": 1,
         "specific_cat_10": [
             {
                 "code" : 1,
@@ -141,30 +141,33 @@ export async function train_RAG() {
 }
 
 export async function ApiCall(data) {
-    return new Promise((resolve, reject) => {
-        fetch('http://localhost:11434/api/generate', {
+    try {
+        const response = await fetch('http://localhost:11434/api/generate', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                model: "modelgemma",
+                model: 'modelgemma',
                 prompt: data.sending_page_text,
                 stream: false,
                 options: {
                     temperature: 2
                 },
-                format: "json",
+                format: 'json',
                 keep_alive: 100000
             })
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
-        .then(data => resolve(data))
-        .catch(error => reject(error));
-    });
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Network response was not ok: ${errorText}`);
+        }
+
+        const result = await response.json();
+        return result;
+    } catch (error) {
+        console.error('Errore nella chiamata API', error.message);
+        throw error;  // Rifiuta la promessa in caso di errore
+    }
 }
