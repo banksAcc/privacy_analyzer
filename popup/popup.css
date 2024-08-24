@@ -61,6 +61,34 @@ body {
     font-size: 18px; /* Imposta la dimensione dell'icona */
 
 }
+.training-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    height: 35px; /* Aumentato per dare spazio al testo */
+    background: lightgrey;
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+    margin-right: 5px;
+    display: flex;
+    flex-direction: column; /* Imposta la direzione verticale */
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    box-sizing: border-box;
+    font-size: 18px; /* Imposta la dimensione dell'icona */
+}
+
+.training-text {
+    font-style:oblique;
+    font-size: 9px; /* Dimensione del testo */
+    margin-top: 5px; /* Spazio tra l'icona e il testo */
+    text-align: center; /* Centra il testo sotto l'icona */
+    color: #555;/* Colore del testo */
+}
 
 .json-text {
     font-size: 9px; /* Dimensione del testo */
@@ -154,11 +182,21 @@ body {
 
 .header-content {
     gap: 10px; /* Spazio tra icona e testo */
-    align-items: center; /* Centra verticalmente il contenuto centrale */
     display: flex;
-    justify-content: center; /* Centra il contenuto */
-    flex-grow: 1; /* Permette alla sezione centrale di espandersi e occupare spazio */
+    align-items: center; /* Centra verticalmente il contenuto centrale */
+    justify-content: center;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
+
+.button-group-left {
+    display: flex;
+    gap: 5px; /* Spazio tra i pulsanti */
+    align-items: center; /* Centra verticalmente i pulsanti */
+    justify-content: flex-start; /* Allinea i pulsanti a sinistra */
+}
+
 
 .team-icon {
     width: 100px; /* Regola la dimensione dell'icona come necessario */

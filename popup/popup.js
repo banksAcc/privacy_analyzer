@@ -1,14 +1,22 @@
+import { Few_Shot, Chaining, RAG } from './training.js';
+
 document.addEventListener('DOMContentLoaded', () => {
+
+    
     
     // Variabile globale per memorizzare i riferimenti ai grafici
     const charts = {};
-    
+
+    // Definizione variabili HTML
     const jsonButton = document.getElementById('jsonButton');
     const teamLink = document.getElementById('teamLink');
     const moreText = document.getElementById('moreText');
     const infoIcon = document.getElementById('infoIcon');
     const clearButton = document.getElementById('clearButton');
     const pieChart = document.getElementById('pie-chart');
+    const fewShot = document.getElementById('training1');
+    const chaining = document.getElementById('training2');
+    const rag = document.getElementById('training3');
 
     // Ottieni l'URL della pagina corrente
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -50,12 +58,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // In ascolto sul click dell'info (visualizza le diverse classi)
     infoIcon.addEventListener('click', function () {
         var menu = document.getElementById('fanMenu');
         menu.classList.toggle('show');
     });
 
-    //logica per scaricare il file json
+    // Logica per scaricare il file json
     jsonButton.addEventListener('click', () => {
         chrome.storage.local.get('processedDataList', function (result) {
             if (result.processedDataList && result.processedDataList.length > 0) {
@@ -75,15 +84,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    //mostriamo link alla pagina about us
+    // In ascolto sul click dell'info del team, redirect alla pagina about us
     teamLink.addEventListener('click', (event) => {
         event.preventDefault();
         window.open('about_us.html', '_blank');
         window.close();
     });
 
-    //gestiamo visualizzazione del testo completo del LLM
-    moreText.addEventListener('click', (event) => {
+    // In ascolto sul click per visualizzare il testo completo del LLM
+    moreText.addEventListener('click', () => {
 
         const blocksToModifyVisibility = document.querySelectorAll('.container'); // Seleziona gli elementi da nascondere
         let currentDisplay;
@@ -125,7 +134,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Aggiungi il listener per il pulsante di pulizia
+    // In ascolto sul click per pulizia della cache
     clearButton.addEventListener('click', function () {
         // Cancella i dati memorizzati nel browser
         chrome.storage.local.remove('processedDataList', function () {
@@ -136,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Gestisci l'evento click sul pieChart
+    // In ascolto sul click icona del pieChart, cosi da vedere i grafici
     pieChart.addEventListener('click', () => {
         const typeValue = pieChart.getAttribute('type');
 
@@ -210,8 +219,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    fewShot.addEventListener('click', async () => {
+        await Few_Shot();
+        
+    });
+
+    chaining.addEventListener('click', async () => {
+        
+    });
+
+    rag.addEventListener('click', async () => {
+        
+    });
+
+
+
 });
 
+// Aggiorna i dati degli elementi in funzione della valutazione della pagina
 function updateIconBasedOnGeneralCat(data) {
 
     for (let i = 0; i < 10; i++) {
@@ -273,6 +298,7 @@ function updateIconBasedOnGeneralCat(data) {
     document.getElementById("moreText").style.display = 'block';
 }
 
+// Modifica la visibilità degli elementi in funzione dalla valutazione della pagina
 function updateIconPageNotEvaluated() {
     const blocksToModifyVisibility = document.querySelectorAll('.container'); // Seleziona gli elementi da nascondere
     blocksToModifyVisibility.forEach(block => {
@@ -287,6 +313,7 @@ function updateIconPageNotEvaluated() {
 
 }
 
+// Funzione che in base alla pagina che stiamo visitando recupera i dati salvati nella cahs del browser
 function getCurretPageData(currentPageUrl, callback) {
     chrome.storage.local.get('processedDataList', function (result) {
         let processedDataList = result.processedDataList || [];
@@ -296,6 +323,7 @@ function getCurretPageData(currentPageUrl, callback) {
     });
 }
 
+// Funzione che gestisce la visibilità de
 function hideDisplayBlockInfoForPie(hide) {
     if (hide) {
         //hide the element
@@ -367,7 +395,7 @@ function getDataForChart(code, processedDataList) {
 
     return { data, labels, backgroundColors };
 }
-
+// Funzione per evidenziare nei grafici le informazioni della pagina che si sta visitanto
 function highlightChartSlice(pageUrl, processedDataList, chart, code) {
 
     let spicificData;
