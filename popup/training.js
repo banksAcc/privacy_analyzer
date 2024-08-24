@@ -1,5 +1,4 @@
 // popup/training.js
-import { ApiCall } from '../background.js';
 
 // Vettore globale contenente i testi da inviare a ApiCall
 const Few_Shot = [
@@ -27,7 +26,7 @@ const RAG = [
 ];
 
 // Funzione che chiama ApiCall 5 volte con input da Few_Shot
-async function train_FewShot() {
+export async function train_FewShot() {
     for (let i = 0; i < 5; i++) {
         const data = { sending_page_text: Few_Shot[i] };
         console.log(`FewShot ${i + 1}:`, data);
@@ -41,7 +40,7 @@ async function train_FewShot() {
 }
 
 // Funzione che chiama ApiCall 5 volte con input da Chaining
-async function train_Chaining() {
+export async function train_Chaining() {
     for (let i = 0; i < 5; i++) {
         const data = { sending_page_text: Chaining[i] };
         console.log(`Chaining ${i + 1}:`, data);
@@ -55,7 +54,7 @@ async function train_Chaining() {
 }
 
 // Funzione che chiama ApiCall 5 volte con input da RAG
-async function train_RAG() {
+export async function train_RAG() {
     for (let i = 0; i < 5; i++) {
         const data = { sending_page_text: RAG[i] };
         console.log(`RAG ${i + 1}:`, data);
@@ -66,4 +65,33 @@ async function train_RAG() {
             console.error(`Error RAG ${i + 1}:`, error);
         }
     }
+}
+
+function ApiCall(data) {
+    return new Promise((resolve, reject) => {
+        fetch('http://localhost:11434/api/generate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                model: "gemma2:2b",
+                prompt: data.sending_page_text,
+                stream: false,
+                options: {
+                    temperature: 2
+                },
+                format: "json",
+                keep_alive: 100000
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => resolve(data))
+        .catch(error => reject(error));
+    });
 }

@@ -1,7 +1,7 @@
 // background.js
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.type === "extractText") {
-        ApiCall({ sending_page_text: message.content })
+        mockApiCall({ sending_page_text: message.content })
             .then(data => {
                 // Ottieni l'URL della pagina corrente
                 let currentPageUrl = message.url || (sender.tab ? sender.tab.url : '');
@@ -72,7 +72,7 @@ function ApiCall(data) {
     });
 }
 
-/*
+
 function mockApiCall(data) {
     return new Promise((resolve) => {
         setTimeout(() => {
@@ -148,7 +148,4 @@ function mockApiCall(data) {
             });
         }, 10000); // Simula un ritardo di 10 secondo
     });
-    
 }
-
-*/

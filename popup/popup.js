@@ -1,4 +1,4 @@
-import { Few_Shot, Chaining, RAG } from './training.js';
+import { train_FewShot, train_Chaining, train_RAG } from './training.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     
@@ -221,7 +221,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fewShot.addEventListener('click', async () => {
         toggleSpinner(true);
         try {
-            await Few_Shot(); // Chiama la funzione asincrona
+            await train_FewShot(); // Chiama la funzione asincrona
         } catch (error) {
             console.error('Errore durante l\'esecuzione di trainModel1:', error);
         } finally {
@@ -233,7 +233,7 @@ document.addEventListener('DOMContentLoaded', () => {
     chaining.addEventListener('click', async () => {
         toggleSpinner(true);
         try {
-            await Chaining(); // Chiama la funzione asincrona
+            await train_Chaining(); // Chiama la funzione asincrona
         } catch (error) {
             console.error('Errore durante l\'esecuzione di trainModel1:', error);
         } finally {
@@ -245,7 +245,7 @@ document.addEventListener('DOMContentLoaded', () => {
     rag.addEventListener('click', async () => {
         toggleSpinner(true);
         try {
-            await RAG(); // Chiama la funzione asincrona
+            await train_RAG(); // Chiama la funzione asincrona
         } catch (error) {
             console.error('Errore durante l\'esecuzione di trainModel1:', error);
         } finally {
