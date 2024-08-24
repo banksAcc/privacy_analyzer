@@ -132,3 +132,7 @@ function mockApiCall(data) {
         }, 10000); // Simula un ritardo di 10 secondo
     });
 }
+
+function elaborateOutput(data) { 
+
+}
