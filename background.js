@@ -49,7 +49,7 @@ function ApiCall(data) {
         data: data
     }, (response) => {
         if (response.status === 'success') {
-            return response.result;
+            return elaborateOutput(response.result, data.sending_page_text);
         } else {
             console.log('Errore:', response.message);
         }
@@ -133,6 +133,53 @@ function mockApiCall(data) {
     });
 }
 
-function elaborateOutput(data) { 
+function elaborateOutput(data, inputText) { 
+    // Mappatura dei tipi basati sui codici
+    const typeMapping = {
+        1: "First Party Collection/Use",
+        2: "Third Party Sharing/Collection",
+        3: "User Choice/Control",
+        4: "User Access, Edit, & Deletion",
+        5: "Data Retention",
+        6: "Data Security",
+        7: "Policy Change",
+        8: "Do Not Track",
+        9: "International & Specific Audiences",
+        10: "Other"
+    };
+
+    try {
+        // 1. Rimuovi i caratteri di a capo e gli escape
+        // Usa il metodo replace per rimuovere \n e \\
+        const cleanedData = data
+            .replace(/\\n/g, '')  // Rimuove i caratteri di a capo \n
+            .replace(/\\(.)/g, '$1'); // Rimuove gli escape \
+
+        // 2. Converte la stringa in JSON
+        const jsonData = JSON.parse(cleanedData);
+        
+        // Composizione del JSON finale
+        const finalJson = {
+            processing_time: "",
+            output_date_time: "",
+            sent_page_text: inputText,
+            LLM_output_short: jsonData.LLM_output_long.slice(0, 250),
+            LLM_output_long: jsonData.LLM_output_long,
+            general_cat_5: jsonData.general_cat_5,
+            specific_cat_10: jsonData.specific_cat_10.map(item => ({
+                code: item.code,
+                type: typeMapping[item.code] || "Unknown",
+                LMM_output: item.LMM_output,
+                LMM_rank: item.LMM_rank
+            }))
+        };
+
+        return finalJson;
+
+    } catch (error) {
+        // Gestisci eventuali errori nella conversione JSON
+        console.error('Errore nella conversione in JSON:', error);
+        return null; // O restituisci un valore di errore specifico se preferisci
+    }
 
 }
