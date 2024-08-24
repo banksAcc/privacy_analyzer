@@ -107,7 +107,7 @@ async function ApiCall_1(data) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                model: 'new-gem',
+                model: 'modelgemma',
                 prompt: data.sending_page_text,
                 stream: false,
                 options: {
