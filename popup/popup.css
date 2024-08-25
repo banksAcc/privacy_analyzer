@@ -154,10 +154,18 @@ body {
 
 .icon-right {
     margin-left: auto; /* Forza l'icona a spostarsi verso destra */
-    justify-content: flex-end; /* Allinea gli elementi al margine destro */
-    font-size: 18px; /* Dimensione dell'icona, puoi modificarla */
+    justify-content: flex-end; 
+    font-size: 18px;
     color: blue;
     cursor: pointer;
+}
+
+.icon-refresh {
+    padding-left: 17px;
+    font-size: 21px;
+    cursor: pointer;
+    position: relative;
+    color:rgb(33, 145, 236);
 }
 
 .content-row {

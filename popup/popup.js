@@ -15,6 +15,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const fewShot = document.getElementById('training1');
     const chaining = document.getElementById('training2');
     const rag = document.getElementById('training3');
+    const refreshData = document.getElementById('refreshData');
+
  
 
     // Ottieni l'URL della pagina corrente
@@ -34,6 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateIconBasedOnGeneralCat(currentPageData.data);
             } else {
                 updateIconPageNotEvaluated();
+
+                /*
                 browser.tabs.sendMessage(tabs[0].id, { action: "getContent" }, function (response) {
                     let currentPageUrl = tabs[0].url;
                     if (response && response.success && response.data) {
@@ -44,7 +48,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         updateIconPageNotEvaluated();
                     }
                     try {
-                        /*
                         browser.runtime.sendMessage({
                             type: "extractText",
                             content: response.content,
@@ -58,12 +61,13 @@ document.addEventListener('DOMContentLoaded', () => {
                                 console.log(response);
                             }
                         });
-                        */
                     } catch (error) {
                         console.log("Url pagina non definito: ", error.message);
                         updateIconPageNotEvaluated();
                     }
                 });
+                */
+
             }
         });
     });
@@ -265,6 +269,13 @@ document.addEventListener('DOMContentLoaded', () => {
             toggleSpinner(false);
         }
     });
+
+    // In ascolto sul click pulsante refresh dati
+    refreshData.addEventListener('click', async () => {
+        updateIconPageNotEvaluated();
+        // pulire la cash del browser relativa alla pagina corrante
+        //
+    });
 });
 
 // Aggiorna i dati degli elementi in funzione della valutazione della pagina
@@ -333,6 +344,8 @@ function updateIconBasedOnGeneralCat(data) {
     document.getElementById("loading-spinner").style.display = "none";
     document.getElementById(25).innerText = data.LLM_output_short;
     document.getElementById("moreText").style.display = 'block';
+    document.getElementById("refreshData").style.display = 'block';
+
 }
 
 // Modifica la visibilità degli elementi in funzione dalla valutazione della pagina
@@ -344,9 +357,11 @@ function updateIconPageNotEvaluated() {
 
     document.getElementById("pie-chart").style.display = 'none';
     document.getElementById("moreText").style.display = 'none';
-    //document.getElementById(11).src = '../rank_icons/one_to_five/classNo.jpg'; // Default icon
     document.getElementById("loading-spinner").style.display = "block";
     document.getElementById(25).innerText = "The analysis did not give valid results. Reload the page or reopen the popup. If the problem persists, it may be a data problem on this page.";
+    document.getElementById("refreshData").style.display = 'none';
+    document.getElementById(11).src = '../rank_icons/one_to_five/classNo.jpg'; // Default icon
+
 
 }
 

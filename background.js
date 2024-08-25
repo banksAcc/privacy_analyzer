@@ -1,4 +1,10 @@
+// Dichiarazione di una variabile globale
+let sessionData = {};
+
 browser.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
+    
+    // Ottieni l'URL della pagina che ha inviato il messaggio
+    let sendingPageUrl = sender.url || (sender.tab ? sender.tab.url : '');
 
     // Dopo l'estrazione testo della pagina viene chiamata l'API ollama e viene salvato l'output
     if (message.type === "extractText") {
@@ -42,8 +48,14 @@ browser.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
             });
 
         } else {
-            CallAPI({ sending_page_text: message.content })
-            .then(data => {
+            CallAPI({ sending_page_text: message.content }, sendingPageUrl)
+                .then(data => {
+
+                if (!data) {
+                    sendResponse({ success: false, error: "aaa" });
+                    return
+                }
+                    
                 // Ottieni l'URL della pagina corrente
                 let currentPageUrl = message.url || (sender.tab ? sender.tab.url : '');
     
@@ -55,9 +67,13 @@ browser.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
                     const existingIndex = processedDataList.findIndex(item => item.url === currentPageUrl);
     
                     if (existingIndex !== -1) {
-                        // L'URL esiste già, sostituisci i dati con quelli più recenti
-                        processedDataList[existingIndex].data = data;
-                        console.log(`Dati aggiornati per l'URL: ${currentPageUrl}`);
+                        // L'URL esiste già, sostituisci i dati con quelli più recenti solo se sono dati validi
+                        if (data.LLM_output_long != "ERRORE") {
+                            processedDataList[existingIndex].data = data;
+                            console.log(`Dati aggiornati per l'URL: ${currentPageUrl}`);
+                        } else {
+                            console.log(`Dati elaborati per l'URL: ${currentPageUrl} non validi, non aggiorno! `);
+                        }
                     } else {
                         // L'URL non esiste, aggiungi i nuovi dati
                         processedDataList.push({
@@ -87,7 +103,7 @@ browser.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
     }
     // Chiamata api da utente
     if (message.action === "call_LLM_Api") {
-        CallAPI(message.data).then(result => {
+        CallAPI(message.data, sendingPageUrl).then(result => {
         sendResponse({result: result});
       }).catch(error => {
         sendResponse({error: error.message});
@@ -107,18 +123,29 @@ browser.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       // Indica che la risposta sarà inviata in modo asincrono
       return true;
     }
-    
 });
 
 // Questa è la funzione da chiamare per l'api, cerca di restituire un json come in LLM/Mod_output.json
-async function CallAPI(data) {
-    const result = await ApiCall(data);
-    return elaborateOutput(result.response, data.sending_page_text);
+async function CallAPI(data, site) {
+    const result = await ApiCall(data, site);
+    return elaborateOutput(result.response, data.sending_page_text,result.skipped);
 }
 
 // Qui avviene la chiama fisica all'api, generalmente non è necessario usare questa funzione, usare CallAPI 
-async function ApiCall(data) {
+async function ApiCall(data, site) {
     try {
+        // Controlla se una chiamata API per questo sito è già in corso
+        if (sessionData[site] && !sessionData[site].isComplete) {
+            console.log(`Chiamata API già in corso per il sito: ${site}. Chiamata ignorata.`);
+            return { skipped: true, message: "API call already in progress for this site." };
+        }
+        
+        // Imposta il flag iniziale nel sessionData per indicare che la chiamata è iniziata
+        sessionData[site] = {
+            isComplete: false,
+            site: site
+        };
+
         const response = await fetch( await getConfigValue('apiUrl'), {
             method: 'POST',
             headers: {
@@ -137,20 +164,32 @@ async function ApiCall(data) {
         });
 
         if (!response.ok) {
+            // Elimina l'entry corrispondente da sessionData in caso di errore
+            delete sessionData[site];
+
             const errorText = await response.text();
             throw new Error(`Network response was not ok: ${errorText}`);
         }
 
         const result = await response.json();
+        // Imposta il flag nel sessionData per indicare che la chiamata è completata
+        sessionData[site].isComplete = true;
+
         return result;
     } catch (error) {
+        // Elimina l'entry corrispondente da sessionData in caso di errore
+        delete sessionData[site];
+
         console.error('Errore nella chiamata API', error.message);
         throw error;  // Rifiuta la promessa in caso di errore
     }
 }
 
 // Funzione per elaborare il testo dell'api e restituire un output json ben formattato
-function elaborateOutput(data, inputText) { 
+function elaborateOutput(data, inputText, skipped) { 
+    if (skipped) {
+        return false;
+    }
     // Mappatura dei tipi basati sui codici
     const typeMapping = {
         1: "First Party Collection/Use",
