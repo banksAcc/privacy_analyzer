@@ -92,11 +92,27 @@ function elaborateOutput(data, inputText) {
         return finalJson;
 
     } catch (error) {
+        
         // Gestisci eventuali errori nella conversione JSON
         console.error('Errore nella conversione in JSON:', error);
-        return null; // O restituisci un valore di errore specifico se preferisci
-    }
 
+        // Composizione del JSON finale
+        const errorJson = {
+            processing_time: "",
+            output_date_time: "",
+            sent_page_text: inputText,
+            LLM_output_short: "ERRORE - LLM HA RISPOSTO IN MANIERA NON COFORME ALLO STANDARD",
+            LLM_output_long: "ERRORE",
+            general_cat_5: -1,
+            specific_cat_10: Object.entries(typeMapping).map(([code, type]) => ({
+                code: parseInt(code), // Converte la chiave da stringa a numero
+                type: type,
+                LMM_output: "ERRORE",
+                LMM_rank: -1
+            }))
+        };
+        return errorJson;
+    }
 }
 
 async function ApiCall_1(data) {

@@ -33,7 +33,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateIconBasedOnGeneralCat(currentPageData.data);
             } else {
                 updateIconPageNotEvaluated();
-                /*
                 chrome.tabs.sendMessage(tabs[0].id, { action: "getContent" }, function (response) {
                     let currentPageUrl = tabs[0].url;
                     try {
@@ -54,7 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         updateIconPageNotEvaluated();
                     }
                 });
-                */
             }
         });
     });
@@ -259,7 +257,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Aggiorna i dati degli elementi in funzione della valutazione della pagina
 function updateIconBasedOnGeneralCat(data) {
-    console.log(data);
+
+    if (data = null) {
+
+    }
 
     for (let i = 0; i < 10; i++) {
         switch (data.specific_cat_10[i].LMM_rank) {
