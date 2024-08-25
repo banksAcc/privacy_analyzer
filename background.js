@@ -35,7 +35,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 });
             })
             .catch(error => {
-                console.error('Errore nella chiamata mock:', error);
+                console.error('Errore nella chiamata mock', error);
                 sendResponse({ success: false, error: error });
             });
         // Indica che risponderai in modo asincrono
@@ -123,7 +123,7 @@ async function ApiCall_1(data) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                model: 'new-gem',
+                model: 'modelgemma',
                 prompt: data.sending_page_text,
                 stream: false,
                 options: {
@@ -142,7 +142,7 @@ async function ApiCall_1(data) {
         const result = await response.json();
         return result;
     } catch (error) {
-        console.error('Errore nella chiamata API:', error.message);
+        console.error('Errore nella chiamata API', error.message);
         throw error;  // Rifiuta la promessa in caso di errore
     }
 }
