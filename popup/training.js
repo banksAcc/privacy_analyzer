@@ -125,7 +125,6 @@ export async function train_Chaining() {
     }
 }
 
-
 // Funzione che chiama ApiCall i volte con input da RAG
 export async function train_RAG() {
     for (let i = 0; i < RAG.length; i++) {

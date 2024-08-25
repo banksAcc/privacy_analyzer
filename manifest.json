@@ -30,9 +30,7 @@
       "http://*/*",
       "https://*/*",
       "storage",
-      "webNavigation",
-      "http://localhost:11434/*" 
-      
+      "webNavigation"
     ],
 
     "content_scripts": [
