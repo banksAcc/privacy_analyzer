@@ -1,14 +1,15 @@
 // background.js
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    //estrazione testo
+browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
+
+    // Dopo l'estrazione testo della pagina viene chiamata l'API ollama e viene salvato l'output
     if (message.type === "extractText") {
         CallAPI({ sending_page_text: message.content })
             .then(data => {
                 // Ottieni l'URL della pagina corrente
                 let currentPageUrl = message.url || (sender.tab ? sender.tab.url : '');
 
-                // Recupera la lista corrente dal chrome.storage.local
-                chrome.storage.local.get({ processedDataList: [] }, function (result) {
+                // Recupera la lista corrente dal browser.storage.local
+                browser.storage.local.get({ processedDataList: [] }, function (result) {
                     let processedDataList = result.processedDataList;
 
                     // Trova l'indice dell'elemento con lo stesso URL
@@ -28,7 +29,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                     }
 
                     // Salva la lista aggiornata nella memoria locale
-                    chrome.storage.local.set({ processedDataList: processedDataList }, () => {
+                    browser.storage.local.set({ processedDataList: processedDataList }, () => {
                         console.log("Dati memorizzati nella memoria locale.");
                         // Rispondi al content script con i dati elaborati
                         sendResponse({ success: true, data: data });
@@ -42,7 +43,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         // Indica che risponderai in modo asincrono
         return true;
     }
-    //chiamata api da utente
+    // Chiamata api da utente
     if (message.action === "call_LLM_Api") {
         CallAPI(message.data).then(result => {
         sendResponse({result: result});
@@ -61,7 +62,7 @@ async function CallAPI(data) {
     return elaborateOutput(result.response, data.sending_page_text);
 }
 
-// qui avviene la chiama fisica all'api
+// Qui avviene la chiama fisica all'api, generalmente non è necessario usare questa funzione, usare CallAPI 
 async function ApiCall(data) {
     try {
         const response = await fetch('http://localhost:11434/api/generate', {
@@ -94,7 +95,7 @@ async function ApiCall(data) {
     }
 }
 
-// funzione per elaborare il testo dell'api
+// Funzione per elaborare il testo dell'api e restituire un output json ben formattato
 function elaborateOutput(data, inputText) { 
     // Mappatura dei tipi basati sui codici
     const typeMapping = {
@@ -163,8 +164,20 @@ function elaborateOutput(data, inputText) {
         return errorJson;
     }
 }
-// chiamata finta, resitituisce sempre gli stessi dati
+
+// Chiamata finta per testare il sistema, riestituisce dati casuali sui punteggi
 function mockApiCall(data) {
+
+    // Funzione per non avere valori sempre uguali e poter testare bene l'estensione
+    function getRandomInt(min, max) {
+        // Assicurati che min e max siano numeri interi e min sia minore o uguale a max
+        min = Math.ceil(min);
+        max = Math.floor(max);
+      
+        // Genera un numero intero casuale tra min e max inclusi
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+      }
+      
     return new Promise((resolve) => {
         setTimeout(() => {
             resolve({
@@ -173,70 +186,70 @@ function mockApiCall(data) {
                 sent_page_text: data.sending_page_text,
                 LLM_output_short: "La primavera è finalmente arrivata, portando con sé fiori colorati e giornate più lunghe. È il momento ideale per passeggiate all'aria aperta e picnic nel parco. Non dimenticare di indossare occhiali da sole e protezione solare per goderti al massimo la stagione!",
                 LLM_output_long: "La sostenibilità è diventata un tema cruciale nel contesto",
-                general_cat_5: 1,
+                general_cat_5: getRandomInt(0,5),
                 specific_cat_10: [
                     {
                         code: 1,
                         type: "First Party Collection/Use",
                         LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
-                        LMM_rank: 2
+                        LMM_rank: getRandomInt(0,3)
                     },
                     {
                         code: 2,
                         type: "Third Party Sharing/Collection",
                         LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
-                        LMM_rank: 3
+                        LMM_rank: getRandomInt(0,3)
                     },
                     {
                         code: 3,
                         type: "User Choice/Control",
                         LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
-                        LMM_rank: 2
+                        LMM_rank: getRandomInt(0,3)
                     },
                     {
                         code: 4,
                         type: "User Access, Edit, & Deletion",
                         LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
-                        LMM_rank: 1
+                        LMM_rank: getRandomInt(0,3)
                     },
                     {
                         code: 5,
                         type: "Data Retention",
                         LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
-                        LMM_rank: 4
+                        LMM_rank: getRandomInt(0,3)
                     },
                     {
                         code: 6,
                         type: "Data Security",
                         LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
-                        LMM_rank: 4
+                        LMM_rank: getRandomInt(0,3)
                     },
                     {
                         code: 7,
                         type: "Policy Change",
                         LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
-                        LMM_rank: 2
+                        LMM_rank: getRandomInt(0,3)
                     },
                     {
                         code: 8,
                         type: "Do Not Track",
                         LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
-                        LMM_rank: 1
+                        LMM_rank: getRandomInt(0,3)
                     },
                     {
                         code: 9,
                         type: "International & Specific Audiences",
                         LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
-                        LMM_rank: 4
+                        LMM_rank: getRandomInt(0,3)
                     },
                     {
                         code: 10,
                         type: "Other",
                         LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
-                        LMM_rank: 3
+                        LMM_rank: getRandomInt(0,3)
                     }
                 ]
             });
-        }, 10000); // Simula un ritardo di 10 secondo
+        }, 1000); // Simula un ritardo di 1 secondo
     });
 }

@@ -1,3 +1,4 @@
+// Promot per il Few_Shot
 const Few_Shot = [
     `Exemple 1: Text of privacy policy: Our service collects user information to improve the overall experience. We share this information with selected partners to provide additional services. Users can manage their preferences through their account settings. We retain information until the user decides to delete their account. We protect information through encryption. We will notify users in case of changes to the policy. We do not respond to Do Not Track signals. Data collection practices for children comply with local regulations.
     Expected result: 
@@ -62,6 +63,7 @@ const Few_Shot = [
 `
 ];
 
+// Promp per il Chaining
 const Chaining = [
     `Step 1: Extract the main purpose of data collection from the following privacy policy text. Text: "Our service collects user information to improve the overall experience. We share this information with selected partners to provide additional services."`,
     
@@ -74,7 +76,7 @@ const Chaining = [
     `Step 5: Summarize all the extracted information from the previous steps into a single, coherent privacy policy summary.`
 ];
 
-
+// Promot per il RAG
 const RAG = [
     "How and why does the service collect user information?",
     "With whom is user data shared, and for what purpose?",
@@ -89,7 +91,7 @@ const RAG = [
 
 ];
 
-// Funzione che chiama ApiCall i volte con input da Few_Shot
+// Funzione che chiama ApiCall i volte con input da Few_Shot, 
 export async function train_FewShot() {
     for (let i = 0; i < Few_Shot.length; i++) {  // Itera su tutti gli esempi nell'array Few_Shot
         const data = { sending_page_text: Few_Shot[i] };
@@ -139,19 +141,24 @@ export async function train_RAG() {
     }
 }
 
-export async function ApiCall(data) {
-    // Invio del messaggio asincrono al background script
-    browser.runtime.sendMessage({
+// Chiamata all'api attravaerso messaggio allo script di backgourd
+async function ApiCall(data) {
+    try {
+      // Invia il messaggio asincrono al background script e aspetta la risposta
+      const response = await browser.runtime.sendMessage({
         action: "call_LLM_Api",
         data: data
-      }).then(response => {
-        if (response.error) {
-          console.error("Errore dal background script:", response.error);
-        } else {
-            console.log("Risposta dal background script:", response.result);
-            return response.result;    
-        }
-      }).catch(error => {
-        console.error("Errore nell'invio del messaggio:", error);
       });
+  
+      if (response.error) {
+        console.error("Errore dal background script:", response.error);
+        throw new Error(response.error); // Propaga l'errore
+      } else {
+        console.log("Risposta dal background script:", response.result);
+        return response.result; // Ritorna il risultato
+      }
+    } catch (error) {
+      console.error("Errore nell'invio del messaggio:", error);
+      throw error; // Propaga l'errore
+    }
 }

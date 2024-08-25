@@ -1,0 +1,7 @@
+{
+    "apiUrl": "https://api.example.com",
+    "modelName": "production",
+    "enableLog": false,
+    "useMockApi": false
+  }
+  

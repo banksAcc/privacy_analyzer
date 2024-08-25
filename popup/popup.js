@@ -18,11 +18,11 @@ document.addEventListener('DOMContentLoaded', () => {
  
 
     // Ottieni l'URL della pagina corrente
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    browser.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         let currentPageUrl = tabs[0].url;
 
         // Recupera la lista di dati salvata
-        chrome.storage.local.get('processedDataList', function (result) {
+        browser.storage.local.get('processedDataList', function (result) {
             //let outputDiv = document.getElementById('output');
             let processedDataList = result.processedDataList || [];
 
@@ -34,10 +34,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateIconBasedOnGeneralCat(currentPageData.data);
             } else {
                 updateIconPageNotEvaluated();
-                chrome.tabs.sendMessage(tabs[0].id, { action: "getContent" }, function (response) {
+                browser.tabs.sendMessage(tabs[0].id, { action: "getContent" }, function (response) {
                     let currentPageUrl = tabs[0].url;
                     try {
-                        chrome.runtime.sendMessage({
+                        browser.runtime.sendMessage({
                             type: "extractText",
                             content: response.content,
                             url: currentPageUrl // Ottieni l'URL della scheda corrente
@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Logica per scaricare il file json
     jsonButton.addEventListener('click', () => {
-        chrome.storage.local.get('processedDataList', function (result) {
+        browser.storage.local.get('processedDataList', function (result) {
             if (result.processedDataList && result.processedDataList.length > 0) {
                 let dataStr = JSON.stringify(result.processedDataList, null, 2);
                 let blob = new Blob([dataStr], { type: 'application/json' });
@@ -341,7 +341,7 @@ function updateIconPageNotEvaluated() {
 
 // Funzione che in base alla pagina che stiamo visitando recupera i dati salvati nella cahs del browser
 function getCurretPageData(currentPageUrl, callback) {
-    chrome.storage.local.get('processedDataList', function (result) {
+    browser.storage.local.get('processedDataList', function (result) {
         let processedDataList = result.processedDataList || [];
         // Filtra i dati per l'URL della pagina corrente
         let currentPageData = processedDataList.find(entry => entry.url === currentPageUrl);
