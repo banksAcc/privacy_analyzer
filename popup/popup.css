@@ -1,4 +1,4 @@
-.body {
+body {
     margin: 0;
     font-family: 'Century Gothic', sans-serif;
     display: flex;
@@ -128,6 +128,7 @@
     background-color: #f9f9f9;
     margin-bottom: 5px;
     width: 280px;
+    height: 120px;
 }
 
 .box img {
@@ -174,7 +175,7 @@
     width: 100%;
     padding: 10px;
     display: flex;
-    justify-content: center;
+    justify-content: space-between; /* Modificato */
     align-items: center;
     position: relative; /* Aggiungi questa linea se non è già presente */
 }
@@ -195,7 +196,6 @@
     align-items: center; /* Centra verticalmente i pulsanti */
     justify-content: flex-start; /* Allinea i pulsanti a sinistra */
 }
-
 
 .team-icon {
     width: 100px; /* Regola la dimensione dell'icona come necessario */

@@ -140,33 +140,18 @@ export async function train_RAG() {
 }
 
 export async function ApiCall(data) {
-    try {
-        const response = await fetch('http://localhost:11434/api/generate', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                model: 'modelgemma',
-                prompt: data.sending_page_text,
-                stream: false,
-                options: {
-                    temperature: 2
-                },
-                format: 'json',
-                keep_alive: 100000
-            })
-        });
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`Network response was not ok: ${errorText}`);
+    // Invio del messaggio asincrono al background script
+    browser.runtime.sendMessage({
+        action: "call_LLM_Api",
+        data: data
+      }).then(response => {
+        if (response.error) {
+          console.error("Errore dal background script:", response.error);
+        } else {
+            console.log("Risposta dal background script:", response.result);
+            return response.result;    
         }
-
-        const result = await response.json();
-        return result;
-    } catch (error) {
-        console.error('Errore nella chiamata API', error.message);
-        throw error;  // Rifiuta la promessa in caso di errore
-    }
+      }).catch(error => {
+        console.error("Errore nell'invio del messaggio:", error);
+      });
 }

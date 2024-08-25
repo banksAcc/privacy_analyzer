@@ -30,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
             let currentPageData = processedDataList.find(entry => entry.url === currentPageUrl);
 
             if (currentPageData) {
-                console.log(currentPageData.data);
+                //console.log(currentPageData.data);
                 updateIconBasedOnGeneralCat(currentPageData.data);
             } else {
                 updateIconPageNotEvaluated();
@@ -108,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
         if (currentDisplay == 'none')
-            document.getElementById("pie-chart").style.display = "block";
+            document.getElementById("pie-chart").style.display = "flex";
         else
             document.getElementById("pie-chart").style.display = "none";
 
@@ -259,8 +259,10 @@ document.addEventListener('DOMContentLoaded', () => {
 // Aggiorna i dati degli elementi in funzione della valutazione della pagina
 function updateIconBasedOnGeneralCat(data) {
 
-    if (data = null) {
-
+    if (data === null) {
+        console.log("Dati non trovati");
+        updateIconPageNotEvaluated();
+        return;
     }
 
     for (let i = 0; i < 10; i++) {

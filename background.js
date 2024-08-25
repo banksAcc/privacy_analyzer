@@ -1,7 +1,8 @@
 // background.js
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+    //estrazione testo
     if (message.type === "extractText") {
-        ApiCall({ sending_page_text: message.content })
+        CallAPI({ sending_page_text: message.content })
             .then(data => {
                 // Ottieni l'URL della pagina corrente
                 let currentPageUrl = message.url || (sender.tab ? sender.tab.url : '');
@@ -35,19 +36,65 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 });
             })
             .catch(error => {
-                console.error('Errore nella chiamata mock', error);
+                console.error('Errore nella chiamata API ', error);
                 sendResponse({ success: false, error: error });
             });
         // Indica che risponderai in modo asincrono
         return true;
     }
+    //chiamata api da utente
+    if (message.action === "call_LLM_Api") {
+        CallAPI(message.data).then(result => {
+        sendResponse({result: result});
+      }).catch(error => {
+        sendResponse({error: error.message});
+      });
+      
+      // Indica che la risposta sarà inviata in modo asincrono
+      return true;
+    }
 });
 
-async function ApiCall(data) {
-    const result = await ApiCall_1(data);
+// questa è la funzione da chiamare per l'api, restituisce un json come in LLM/Mod_output.json
+async function CallAPI(data) {
+    const result = await ApiCall(data);
     return elaborateOutput(result.response, data.sending_page_text);
 }
 
+// qui avviene la chiama fisica all'api
+async function ApiCall(data) {
+    try {
+        const response = await fetch('http://localhost:11434/api/generate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                model: 'new-gem',
+                prompt: data.sending_page_text,
+                stream: false,
+                options: {
+                    temperature: 2
+                },
+                format: 'json',
+                keep_alive: 100000
+            })
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Network response was not ok: ${errorText}`);
+        }
+
+        const result = await response.json();
+        return result;
+    } catch (error) {
+        console.error('Errore nella chiamata API', error.message);
+        throw error;  // Rifiuta la promessa in caso di errore
+    }
+}
+
+// funzione per elaborare il testo dell'api
 function elaborateOutput(data, inputText) { 
     // Mappatura dei tipi basati sui codici
     const typeMapping = {
@@ -94,7 +141,7 @@ function elaborateOutput(data, inputText) {
     } catch (error) {
         
         // Gestisci eventuali errori nella conversione JSON
-        console.error('Errore nella conversione in JSON:', error);
+        console.log('Errore nella conversione in JSON:', error);
 
         // Composizione del JSON finale
         const errorJson = {
@@ -111,42 +158,12 @@ function elaborateOutput(data, inputText) {
                 LMM_rank: -1
             }))
         };
+
+        //console.log(errorJson);
         return errorJson;
     }
 }
-
-async function ApiCall_1(data) {
-    try {
-        const response = await fetch('http://localhost:11434/api/generate', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                model: 'modelgemma',
-                prompt: data.sending_page_text,
-                stream: false,
-                options: {
-                    temperature: 2
-                },
-                format: 'json',
-                keep_alive: 100000
-            })
-        });
-
-        if (!response.ok) {
-            const errorText = await response.text();
-            throw new Error(`Network response was not ok: ${errorText}`);
-        }
-
-        const result = await response.json();
-        return result;
-    } catch (error) {
-        console.error('Errore nella chiamata API', error.message);
-        throw error;  // Rifiuta la promessa in caso di errore
-    }
-}
-
+// chiamata finta, resitituisce sempre gli stessi dati
 function mockApiCall(data) {
     return new Promise((resolve) => {
         setTimeout(() => {
