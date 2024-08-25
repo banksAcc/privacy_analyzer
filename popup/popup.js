@@ -36,7 +36,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateIconPageNotEvaluated();
                 browser.tabs.sendMessage(tabs[0].id, { action: "getContent" }, function (response) {
                     let currentPageUrl = tabs[0].url;
+                    if (response && response.success && response.data) {
+                        updateIconBasedOnGeneralCat(response.data);
+                    } else {
+                        console.error("Errore durante l'elaborazione dei dati.");
+                        console.log(response);
+                        updateIconPageNotEvaluated();
+                    }
                     try {
+                        /*
                         browser.runtime.sendMessage({
                             type: "extractText",
                             content: response.content,
@@ -47,8 +55,10 @@ document.addEventListener('DOMContentLoaded', () => {
                                 updateIconBasedOnGeneralCat(response.data);
                             } else {
                                 console.error("Errore durante l'elaborazione dei dati.");
+                                console.log(response);
                             }
                         });
+                        */
                     } catch (error) {
                         console.log("Url pagina non definito: ", error.message);
                         updateIconPageNotEvaluated();
@@ -112,6 +122,7 @@ document.addEventListener('DOMContentLoaded', () => {
         else
             document.getElementById("pie-chart").style.display = "none";
 
+        
         // Ottieni l'URL della pagina corrente
         browser.tabs.query({ active: true, currentWindow: true }, function (tabs) {
             let currentPageUrl = tabs[0].url;

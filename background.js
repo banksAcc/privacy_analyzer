@@ -203,7 +203,7 @@ function elaborateOutput(data, inputText) {
             processing_time: "",
             output_date_time: "",
             sent_page_text: inputText,
-            LLM_output_short: "ERRORE - LLM HA RISPOSTO IN MANIERA NON COFORME ALLO STANDARD",
+            LLM_output_short: "ERRORE - LLM HA RISPOSTO IN MANIERA NON CONFORME ALLO STANDARD",
             LLM_output_long: "ERRORE",
             general_cat_5: -1,
             specific_cat_10: Object.entries(typeMapping).map(([code, type]) => ({
