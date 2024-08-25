@@ -2,6 +2,5 @@
     "apiUrl": "http://localhost:11434/api/generate",
     "modelName": "new-gem",
     "enableLog": true,
-    "enableVerboseLog":false,
     "useMockApi": false
   }

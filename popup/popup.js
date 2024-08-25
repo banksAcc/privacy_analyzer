@@ -17,8 +17,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const rag = document.getElementById('training3');
     const refreshData = document.getElementById('refreshData');
 
- 
-
     // Ottieni l'URL della pagina corrente
     browser.tabs.query({ active: true, currentWindow: true }, function (tabs) {
         let currentPageUrl = tabs[0].url;
@@ -36,38 +34,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 updateIconBasedOnGeneralCat(currentPageData.data);
             } else {
                 updateIconPageNotEvaluated();
-
-                /*
-                browser.tabs.sendMessage(tabs[0].id, { action: "getContent" }, function (response) {
-                    let currentPageUrl = tabs[0].url;
-                    if (response && response.success && response.data) {
-                        updateIconBasedOnGeneralCat(response.data);
-                    } else {
-                        console.error("Errore durante l'elaborazione dei dati.");
-                        console.log(response);
-                        updateIconPageNotEvaluated();
-                    }
-                    try {
-                        browser.runtime.sendMessage({
-                            type: "extractText",
-                            content: response.content,
-                            url: currentPageUrl // Ottieni l'URL della scheda corrente
-                        }, function (response) {
-                            // Richiesta di estrazione completata, ora possiamo aggiornare le icone
-                            if (response && response.success && response.data) {
-                                updateIconBasedOnGeneralCat(response.data);
-                            } else {
-                                console.error("Errore durante l'elaborazione dei dati.");
-                                console.log(response);
-                            }
-                        });
-                    } catch (error) {
-                        console.log("Url pagina non definito: ", error.message);
-                        updateIconPageNotEvaluated();
-                    }
-                });
-                */
-
             }
         });
     });
@@ -271,11 +237,34 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // In ascolto sul click pulsante refresh dati
-    refreshData.addEventListener('click', async () => {
-        updateIconPageNotEvaluated();
-        // pulire la cash del browser relativa alla pagina corrante
-        //
+    document.getElementById('refreshData').addEventListener('click', async () => {
+        try {
+            updateIconPageNotEvaluated();
+    
+            // Ottieni la scheda attiva
+            let [tab] = await browser.tabs.query({ active: true, currentWindow: true });
+    
+            // Ottieni l'URL della pagina corrente
+            const currentPageUrl = tab.url;
+    
+            // Recupera la lista corrente dal browser.storage.local
+            let result = await browser.storage.local.get({ processedDataList: [] });
+            let processedDataList = result.processedDataList;
+    
+            // Filtra la lista per rimuovere l'elemento con l'URL corrente
+            processedDataList = processedDataList.filter(item => item.url !== currentPageUrl);
+    
+            // Salva la lista aggiornata nella memoria locale
+            await browser.storage.local.set({ processedDataList: processedDataList });
+            console.log("Dati aggiornati nella memoria locale.");
+    
+            // Invia un messaggio al content script della scheda attiva
+            await browser.tabs.sendMessage(tab.id, { action: 'reloadLMM' });
+        } catch (error) {
+            console.error('Errore durante l\'aggiornamento dei dati:', error);
+        }
     });
+    
 });
 
 // Aggiorna i dati degli elementi in funzione della valutazione della pagina
@@ -490,9 +479,15 @@ function highlightChartSlice(pageUrl, processedDataList, chart, code) {
     const sliceIndex = chart.data.labels.indexOf(label);
 
     if (sliceIndex !== -1) {
+        // Assicurati che borderWidth sia un array
+        if (!Array.isArray(chart.data.datasets[0].borderWidth)) {
+            console.warn('borderWidth non è un array. Inizializzo come array.');
+            chart.data.datasets[0].borderWidth = Array(chart.data.labels.length).fill(1); // Imposta un valore predefinito
+        }
+
         // Step 3: Evidenzia lo spicchio modificando il colore del bordo
         chart.data.datasets[0].borderColor[sliceIndex] = '#000000'; // Imposta il colore del bordo a nero
-        chart.data.datasets[0].borderWidth[sliceIndex] = 5; // Imposta lo spessore del bordo a 5
+        chart.data.datasets[0].borderWidth[sliceIndex] = 2; // Imposta lo spessore del bordo a 5
 
         // Aggiorna il grafico per riflettere le modifiche
         chart.update();
