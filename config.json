@@ -1,7 +1,6 @@
 {
-    "apiUrl": "https://api.example.com",
-    "modelName": "production",
-    "enableLog": false,
+    "apiUrl": "http://localhost:11434/api/generate",
+    "modelName": "new-gem",
+    "enableLog": true,
     "useMockApi": false
   }
-  

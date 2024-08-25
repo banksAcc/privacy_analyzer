@@ -1,20 +1,20 @@
-// background.js
-browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
+browser.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
 
     // Dopo l'estrazione testo della pagina viene chiamata l'API ollama e viene salvato l'output
     if (message.type === "extractText") {
-        CallAPI({ sending_page_text: message.content })
+        if (await getConfigValue('useMockApi')) {
+            mockApiCall({ sending_page_text: message.content })
             .then(data => {
                 // Ottieni l'URL della pagina corrente
                 let currentPageUrl = message.url || (sender.tab ? sender.tab.url : '');
-
+    
                 // Recupera la lista corrente dal browser.storage.local
                 browser.storage.local.get({ processedDataList: [] }, function (result) {
                     let processedDataList = result.processedDataList;
-
+    
                     // Trova l'indice dell'elemento con lo stesso URL
                     const existingIndex = processedDataList.findIndex(item => item.url === currentPageUrl);
-
+    
                     if (existingIndex !== -1) {
                         // L'URL esiste già, sostituisci i dati con quelli più recenti
                         processedDataList[existingIndex].data = data;
@@ -27,7 +27,7 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
                         });
                         console.log("Nuovi dati aggiunti alla lista.");
                     }
-
+    
                     // Salva la lista aggiornata nella memoria locale
                     browser.storage.local.set({ processedDataList: processedDataList }, () => {
                         console.log("Dati memorizzati nella memoria locale.");
@@ -40,6 +40,48 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
                 console.error('Errore nella chiamata API ', error);
                 sendResponse({ success: false, error: error });
             });
+
+        } else {
+            CallAPI({ sending_page_text: message.content })
+            .then(data => {
+                // Ottieni l'URL della pagina corrente
+                let currentPageUrl = message.url || (sender.tab ? sender.tab.url : '');
+    
+                // Recupera la lista corrente dal browser.storage.local
+                browser.storage.local.get({ processedDataList: [] }, function (result) {
+                    let processedDataList = result.processedDataList;
+    
+                    // Trova l'indice dell'elemento con lo stesso URL
+                    const existingIndex = processedDataList.findIndex(item => item.url === currentPageUrl);
+    
+                    if (existingIndex !== -1) {
+                        // L'URL esiste già, sostituisci i dati con quelli più recenti
+                        processedDataList[existingIndex].data = data;
+                        console.log(`Dati aggiornati per l'URL: ${currentPageUrl}`);
+                    } else {
+                        // L'URL non esiste, aggiungi i nuovi dati
+                        processedDataList.push({
+                            url: currentPageUrl,
+                            data: data
+                        });
+                        console.log("Nuovi dati aggiunti alla lista.");
+                    }
+    
+                    // Salva la lista aggiornata nella memoria locale
+                    browser.storage.local.set({ processedDataList: processedDataList }, () => {
+                        console.log("Dati memorizzati nella memoria locale.");
+                        // Rispondi al content script con i dati elaborati
+                        sendResponse({ success: true, data: data });
+                    });
+                });
+            })
+            .catch(error => {
+                console.error('Errore nella chiamata API ', error);
+                sendResponse({ success: false, error: error });
+            });
+
+        }
+
         // Indica che risponderai in modo asincrono
         return true;
     }
@@ -54,9 +96,21 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
       // Indica che la risposta sarà inviata in modo asincrono
       return true;
     }
+    // Chiamata per le variabi d'ambiente
+    if (message.action === "envVar") {
+        await getConfigValue(message.data).then(result => {
+        sendResponse({result: result});
+      }).catch(error => {
+        sendResponse({error: error.message});
+      });
+      
+      // Indica che la risposta sarà inviata in modo asincrono
+      return true;
+    }
+    
 });
 
-// questa è la funzione da chiamare per l'api, restituisce un json come in LLM/Mod_output.json
+// Questa è la funzione da chiamare per l'api, cerca di restituire un json come in LLM/Mod_output.json
 async function CallAPI(data) {
     const result = await ApiCall(data);
     return elaborateOutput(result.response, data.sending_page_text);
@@ -65,13 +119,13 @@ async function CallAPI(data) {
 // Qui avviene la chiama fisica all'api, generalmente non è necessario usare questa funzione, usare CallAPI 
 async function ApiCall(data) {
     try {
-        const response = await fetch('http://localhost:11434/api/generate', {
+        const response = await fetch( await getConfigValue('apiUrl'), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                model: 'new-gem',
+                model: await getConfigValue('modelName'),
                 prompt: data.sending_page_text,
                 stream: false,
                 options: {
@@ -252,4 +306,20 @@ function mockApiCall(data) {
             });
         }, 1000); // Simula un ritardo di 1 secondo
     });
+}
+
+// Funzione per ottenere una variabile di configurazione specifica
+async function getConfigValue(key) {
+    return loadConfig().then(config => config[key]);
+}
+
+// Funzione per caricare la configurazione
+async function loadConfig() {
+    return fetch(browser.runtime.getURL('config.json'))
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        });
 }
