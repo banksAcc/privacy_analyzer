@@ -21,12 +21,15 @@ document.addEventListener('DOMContentLoaded', () => {
     // Ottieni l'URL della pagina corrente
     browser.tabs.query({ active: true, currentWindow: true }, async function (tabs) {
         
-        browser.storage.local.get('isLoop').then((result) => {
-            const isLoop = result.isLoop || false;
-            // Utilizza lo stato recuperato come necessario
-            toggleSpinner(isLoop);
-        });
-        
+        try {
+            const isLoading = await checkIsLoading();
+            console.log("Stato di isLoading:", isLoading);
+            toggleSpinner(isLoading);
+            // Aggiorna l'interfaccia utente in base al valore di isLoading
+        } catch (error) {
+            console.error("Errore:", error);
+        }
+
         let currentPageUrl = tabs[0].url;
 
         // Recupera la lista di dati salvata
@@ -216,7 +219,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('Errore durante l\'esecuzione di trainModel1:', error);
         } finally {
-            toggleSpinner(false);
         }
     });
 
@@ -228,7 +230,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('Errore durante l\'esecuzione di trainModel1:', error);
         } finally {
-            toggleSpinner(false);
         }
     });
 
@@ -240,7 +241,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.error('Errore durante l\'esecuzione di trainModel1:', error);
         } finally {
-            toggleSpinner(false);
         }
     });
 
@@ -516,4 +516,15 @@ function toggleSpinner(show) {
     fewShot.style.display = show ? 'none' : 'flex';
     chaining.style.display = show ? 'none' : 'flex';
     rag.style.display = show ? 'none' : 'flex';
+}
+
+// Funzione per chiedere al content script lo stato di isLoading
+function checkIsLoading() {
+    return new Promise((resolve, reject) => {
+        browser.storage.local.get(['isLoading']).then((result) => {
+            resolve(result.isLoading !== undefined ? result.isLoading : false);
+        }).catch((error) => {
+            reject(new Error(error));
+        });
+    });
 }

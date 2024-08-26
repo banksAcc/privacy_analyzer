@@ -1,10 +1,8 @@
 // Dichiarazione di una variabile globale
 let sessionData = {};
 
-let loopInfo = false;
-
 browser.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
-    
+
     // Ottieni l'URL della pagina che ha inviato il messaggio
     let sendingPageUrl = sender.url || (sender.tab ? sender.tab.url : '');
 
@@ -12,136 +10,166 @@ browser.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
     if (message.type === "extractText") {
         if (await getConfigValue('useMockApi')) {
             mockApiCall({ sending_page_text: message.content })
-            .then(data => {
-                // Ottieni l'URL della pagina corrente
-                let currentPageUrl = message.url || (sender.tab ? sender.tab.url : '');
-    
-                // Recupera la lista corrente dal browser.storage.local
-                browser.storage.local.get({ processedDataList: [] }, function (result) {
-                    let processedDataList = result.processedDataList;
-    
-                    // Trova l'indice dell'elemento con lo stesso URL
-                    const existingIndex = processedDataList.findIndex(item => item.url === currentPageUrl);
-    
-                    if (existingIndex !== -1) {
-                        // L'URL esiste già, sostituisci i dati con quelli più recenti
-                        processedDataList[existingIndex].data = data;
-                        console.log(`Dati aggiornati per l'URL (nuovo): ${currentPageUrl}`);
-                    } else {
-                        // L'URL non esiste, aggiungi i nuovi dati
-                        processedDataList.push({
-                            url: currentPageUrl,
-                            data: data
+                .then(data => {
+                    // Ottieni l'URL della pagina corrente
+                    let currentPageUrl = message.url || (sender.tab ? sender.tab.url : '');
+
+                    // Recupera la lista corrente dal browser.storage.local
+                    browser.storage.local.get({ processedDataList: [] }, function (result) {
+                        let processedDataList = result.processedDataList;
+
+                        // Trova l'indice dell'elemento con lo stesso URL
+                        const existingIndex = processedDataList.findIndex(item => item.url === currentPageUrl);
+
+                        if (existingIndex !== -1) {
+                            // L'URL esiste già, sostituisci i dati con quelli più recenti
+                            processedDataList[existingIndex].data = data;
+                            console.log(`Dati aggiornati per l'URL (nuovo): ${currentPageUrl}`);
+                        } else {
+                            // L'URL non esiste, aggiungi i nuovi dati
+                            processedDataList.push({
+                                url: currentPageUrl,
+                                data: data
+                            });
+                            console.log("Nuovi dati aggiunti alla lista.");
+                        }
+
+                        // Salva la lista aggiornata nella memoria locale
+                        browser.storage.local.set({ processedDataList: processedDataList }, () => {
+                            console.log("Dati memorizzati nella memoria locale.");
+                            // Rispondi al content script con i dati elaborati
+                            sendResponse({ success: true, data: data });
                         });
-                        console.log("Nuovi dati aggiunti alla lista.");
-                    }
-    
-                    // Salva la lista aggiornata nella memoria locale
-                    browser.storage.local.set({ processedDataList: processedDataList }, () => {
-                        console.log("Dati memorizzati nella memoria locale.");
-                        // Rispondi al content script con i dati elaborati
-                        sendResponse({ success: true, data: data });
                     });
+                })
+                .catch(error => {
+                    console.error('Errore nella chiamata API ', error);
+                    sendResponse({ success: false, error: error });
                 });
-            })
-            .catch(error => {
-                console.error('Errore nella chiamata API ', error);
-                sendResponse({ success: false, error: error });
-            });
 
         } else {
             CallAPI({ sending_page_text: message.content }, sendingPageUrl, false)
                 .then(data => {
 
-                if (!data) {
-                    sendResponse({ success: false, error: "doppia chiamata" });
-                    return
-                }
-                    
-                // Ottieni l'URL della pagina corrente
-                let currentPageUrl = message.url || (sender.tab ? sender.tab.url : '');
-    
-                // Recupera la lista corrente dal browser.storage.local
-                browser.storage.local.get({ processedDataList: [] }, function (result) {
-                    let processedDataList = result.processedDataList;
-    
-                    // Trova l'indice dell'elemento con lo stesso URL
-                    const existingIndex = processedDataList.findIndex(item => item.url === currentPageUrl);
-    
-                    if (existingIndex !== -1) {
-                        // L'URL esiste già, sostituisci i dati con quelli più recenti solo se sono dati validi
-                        if (data.LLM_output_long != "ERRORE") {
-                            processedDataList[existingIndex].data = data;
-                            console.log(`Dati aggiornati per l'URL (non nuovo): ${currentPageUrl}`);
-                        } else {
-                            console.log(`Dati elaborati per l'URL: ${currentPageUrl} non validi, non aggiorno! `);
-                        }
-                    } else {
-                        // L'URL non esiste, aggiungi i nuovi dati
-                        processedDataList.push({
-                            url: currentPageUrl,
-                            data: data
-                        });
-                        console.log("Nuovi dati aggiunti alla lista.");
+                    if (!data) {
+                        sendResponse({ success: false, error: "doppia chiamata" });
+                        return
                     }
-    
-                    // Salva la lista aggiornata nella memoria locale
-                    browser.storage.local.set({ processedDataList: processedDataList }, () => {
-                        console.log("Dati memorizzati nella memoria locale.");
-                        // Rispondi al content script con i dati elaborati
-                        sendResponse({ success: true, data: data });
+
+                    // Ottieni l'URL della pagina corrente
+                    let currentPageUrl = message.url || (sender.tab ? sender.tab.url : '');
+
+                    // Recupera la lista corrente dal browser.storage.local
+                    browser.storage.local.get({ processedDataList: [] }, function (result) {
+                        let processedDataList = result.processedDataList;
+
+                        // Trova l'indice dell'elemento con lo stesso URL
+                        const existingIndex = processedDataList.findIndex(item => item.url === currentPageUrl);
+
+                        if (existingIndex !== -1) {
+                            // L'URL esiste già, sostituisci i dati con quelli più recenti solo se sono dati validi
+                            if (data.LLM_output_long != "ERRORE") {
+                                processedDataList[existingIndex].data = data;
+                                console.log(`Dati aggiornati per l'URL (non nuovo): ${currentPageUrl}`);
+                            } else {
+                                console.log(`Dati elaborati per l'URL: ${currentPageUrl} non validi, non aggiorno! `);
+                            }
+                        } else {
+                            // L'URL non esiste, aggiungi i nuovi dati
+                            processedDataList.push({
+                                url: currentPageUrl,
+                                data: data
+                            });
+                            console.log("Nuovi dati aggiunti alla lista.");
+                        }
+
+                        // Salva la lista aggiornata nella memoria locale
+                        browser.storage.local.set({ processedDataList: processedDataList }, () => {
+                            console.log("Dati memorizzati nella memoria locale.");
+                            // Rispondi al content script con i dati elaborati
+                            sendResponse({ success: true, data: data });
+                        });
                     });
+                })
+                .catch(error => {
+                    console.error('Errore nella chiamata API ', error);
+                    sendResponse({ success: false, error: error });
                 });
-            })
-            .catch(error => {
-                console.error('Errore nella chiamata API ', error);
-                sendResponse({ success: false, error: error });
-            });
 
         }
 
         // Indica che risponderai in modo asincrono
         return true;
-    }
-    // Chiamata api da utente
-    if (message.action === "call_LLM_Api") {
-        try {
-            const result = await TestCallAPI(message.data, sender.url, true);
-            console.log("pipppo");
-            sendResponse({ result: result });
-            console.log(result);
-        } catch (error) {
-            sendResponse({ error: error.message });
-        }
+    };
 
-        // Indica che la risposta sarà inviata in modo asincrono
-        return true;
-    }
     // Chiamata per le variabi d'ambiente
     if (message.action === "envVar") {
         await getConfigValue(message.data).then(result => {
-        sendResponse({result: result});
-      }).catch(error => {
-        sendResponse({error: error.message});
-      });
-      
-      // Indica che la risposta sarà inviata in modo asincrono
-      return true;
-    }
+            sendResponse({ result: result });
+        }).catch(error => {
+            sendResponse({ error: error.message });
+        });
 
+        // Indica che la risposta sarà inviata in modo asincrono
+        return true;
+    };
+
+    // Chiamata per fare il prompt engineering
+    if (message.type === "call_LLM_Api") {
+        const data = message.data; 
+        const site = message.site;
+
+        console.log("Richiesta ricevuta per la chiamata all'Api");
+
+        (async () => {
+            try {
+                saveIsLoading(true);
+
+                console.log("Chiamata alla funzione CallAPI...");
+                const apiResult = await CallAPI(data, site, false); // Chiamata alla funzione API
+                
+                saveIsLoading(false);
+
+                // Invia la risposta direttamente con sendResponse
+                console.log("Invio della risposta...", apiResult);
+                sendResponse({
+                    result: apiResult // Usa il risultato elaborato dalla funzione API
+                });
+            } catch (error) {
+                saveIsLoading(false);
+                console.error("Errore nella logica asincrona:", error);
+                sendResponse({
+                    error: error.message
+                });
+            } finally {
+
+                // Questo viene eseguito indipendentemente dal successo o dal fallimento
+                saveIsLoading(false);
+            }
+        })();
+
+        // Indica che la risposta sarà gestita in modo asincrono
+        return true;
+    };
+
+});
+
+// Reset isLoading al riavvio dell'estensione
+browser.runtime.onStartup.addListener(() => {
+    // Azzera il valore di isLoading
+    saveIsLoading(false);
+});
+
+// Se l'estensione viene ricaricata:
+browser.runtime.onInstalled.addListener((details) => {
+    saveIsLoading(false);
 });
 
 // Questa è la funzione da chiamare per l'api, cerca di restituire un json come in LLM/Mod_output.json
 async function CallAPI(data, site, enableDoubleSite) {
-    const result = await ApiCall(data, site,enableDoubleSite);
-    return elaborateOutput(result.response, data.sending_page_text,result.skipped);
+    const result = await ApiCall(data, site, enableDoubleSite);
+    return elaborateOutput(result.response, data.sending_page_text, result.skipped);
 }
-
-// Questa è la funzione da chiamare per l'api, cerca di restituire un json come in LLM/Mod_output.json
-async function TestCallAPI(data, site, enableDoubleSite) {
-    return "angelo";
-}
-
 
 // Qui avviene la chiama fisica all'api, generalmente non è necessario usare questa funzione, usare CallAPI 
 async function ApiCall(data, site, enableDoubleSite) {
@@ -151,7 +179,7 @@ async function ApiCall(data, site, enableDoubleSite) {
             console.log(`Chiamata API già in corso per il sito: ${site}. Chiamata ignorata.`);
             return { skipped: true, message: "API call already in progress for this site." };
         }
-        
+
         // Imposta il flag iniziale nel sessionData per indicare che la chiamata è iniziata
         if (!enableDoubleSite)
             sessionData[site] = {
@@ -159,7 +187,7 @@ async function ApiCall(data, site, enableDoubleSite) {
                 site: site
             };
 
-        const response = await fetch( await getConfigValue('apiUrl'), {
+        const response = await fetch(await getConfigValue('apiUrl'), {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -204,7 +232,7 @@ async function ApiCall(data, site, enableDoubleSite) {
 }
 
 // Funzione per elaborare il testo dell'api e restituire un output json ben formattato
-function elaborateOutput(data, inputText, skipped) { 
+function elaborateOutput(data, inputText, skipped) {
     if (skipped) {
         return false;
     }
@@ -231,7 +259,7 @@ function elaborateOutput(data, inputText, skipped) {
 
         // 2. Converte la stringa in JSON
         const jsonData = JSON.parse(cleanedData);
-        
+
         // Composizione del JSON finale
         const finalJson = {
             processing_time: "",
@@ -251,7 +279,7 @@ function elaborateOutput(data, inputText, skipped) {
         return finalJson;
 
     } catch (error) {
-        
+
         // Gestisci eventuali errori nella conversione JSON
         console.log('Errore nella conversione in JSON:', error);
 
@@ -284,11 +312,11 @@ function mockApiCall(data) {
         // Assicurati che min e max siano numeri interi e min sia minore o uguale a max
         min = Math.ceil(min);
         max = Math.floor(max);
-      
+
         // Genera un numero intero casuale tra min e max inclusi
         return Math.floor(Math.random() * (max - min + 1)) + min;
-      }
-      
+    }
+
     return new Promise((resolve) => {
         setTimeout(() => {
             resolve({
@@ -297,67 +325,67 @@ function mockApiCall(data) {
                 sent_page_text: data.sending_page_text,
                 LLM_output_short: "La primavera è finalmente arrivata, portando con sé fiori colorati e giornate più lunghe. È il momento ideale per passeggiate all'aria aperta e picnic nel parco. Non dimenticare di indossare occhiali da sole e protezione solare per goderti al massimo la stagione!",
                 LLM_output_long: "La sostenibilità è diventata un tema cruciale nel contesto",
-                general_cat_5: getRandomInt(0,5),
+                general_cat_5: getRandomInt(0, 5),
                 specific_cat_10: [
                     {
                         code: 1,
                         type: "First Party Collection/Use",
                         LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
-                        LMM_rank: getRandomInt(0,3)
+                        LMM_rank: getRandomInt(0, 3)
                     },
                     {
                         code: 2,
                         type: "Third Party Sharing/Collection",
                         LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
-                        LMM_rank: getRandomInt(0,3)
+                        LMM_rank: getRandomInt(0, 3)
                     },
                     {
                         code: 3,
                         type: "User Choice/Control",
                         LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
-                        LMM_rank: getRandomInt(0,3)
+                        LMM_rank: getRandomInt(0, 3)
                     },
                     {
                         code: 4,
                         type: "User Access, Edit, & Deletion",
                         LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
-                        LMM_rank: getRandomInt(0,3)
+                        LMM_rank: getRandomInt(0, 3)
                     },
                     {
                         code: 5,
                         type: "Data Retention",
                         LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
-                        LMM_rank: getRandomInt(0,3)
+                        LMM_rank: getRandomInt(0, 3)
                     },
                     {
                         code: 6,
                         type: "Data Security",
                         LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
-                        LMM_rank: getRandomInt(0,3)
+                        LMM_rank: getRandomInt(0, 3)
                     },
                     {
                         code: 7,
                         type: "Policy Change",
                         LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
-                        LMM_rank: getRandomInt(0,3)
+                        LMM_rank: getRandomInt(0, 3)
                     },
                     {
                         code: 8,
                         type: "Do Not Track",
                         LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
-                        LMM_rank: getRandomInt(0,3)
+                        LMM_rank: getRandomInt(0, 3)
                     },
                     {
                         code: 9,
                         type: "International & Specific Audiences",
                         LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
-                        LMM_rank: getRandomInt(0,3)
+                        LMM_rank: getRandomInt(0, 3)
                     },
                     {
                         code: 10,
                         type: "Other",
                         LMM_output: "Virtus est medium inter extremos vitia. Aurea mediocritas nos ad tranquillitatem animi et aequilibrium vitae ducit, inter fervorem et tristitiam.",
-                        LMM_rank: getRandomInt(0,3)
+                        LMM_rank: getRandomInt(0, 3)
                     }
                 ]
             });
@@ -379,4 +407,15 @@ async function loadConfig() {
             }
             return response.json();
         });
+}
+
+// Funzione per impostare lo stato di loading
+function saveIsLoading(isLoading) {
+    return new Promise((resolve, reject) => {
+        browser.storage.local.set({ isLoading: isLoading }).then(() => {
+            resolve();
+        }).catch((error) => {
+            reject(new Error(error));
+        });
+    });
 }

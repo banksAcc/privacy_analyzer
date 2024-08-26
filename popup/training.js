@@ -94,30 +94,25 @@ const RAG = [
 // Funzione che chiama ApiCall i volte con input da Few_Shot, 
 export async function train_FewShot() {
     // Notifica che il ciclo di training è iniziato
-    browser.storage.local.set({ isLoop: true });
     try {
 
         for (let i = 0; i < Few_Shot.length; i++) {  // Itera su tutti gli esempi nell'array Few_Shot
             const data = { sending_page_text: Few_Shot[i] };
-            console.log(`AFewShot ${i + 1}:`, data);
+            console.log(`AFewShot Input ${i + 1}:`, data);
             try {
-                const result = await ApiCall(data);  // Chiamata API per ciascun esempio
-                console.log(`AFewShot output ${i + 1}:`, result);
+                await ApiCall(data,"FewShot");  // Chiamata API per ciascun esempio
+                //console.log(`AFewShot output ${i + 1}:`, result);
             } catch (error) {
                 console.error(`Error AFewShot ${i + 1}:`, error);
             }
         }
     } finally {
-        // Notifica che il ciclo di training è terminato
-        browser.storage.local.set({ isLoop: false });
 
     }
 }
 
 // Funzione che chiama ApiCall i volte con input da Chaining
 export async function train_Chaining() {
-    // Imposta lo stato globale per indicare che siamo in un loop
-    browser.storage.local.set({ isLoop: true });
 
     try {
         let previousResult = ""; // Inizializzi la variabile che conterrà l'output precedente
@@ -139,53 +134,43 @@ export async function train_Chaining() {
             }
         }
     } finally {
-        // Imposta lo stato globale a false dopo il completamento del loop
-        browser.storage.local.set({ isLoop: false });
 
     }
 }
 
 // Funzione che chiama ApiCall i volte con input da RAG
 export async function train_RAG() {
-    // Imposta lo stato globale per indicare che siamo in un loop
-    browser.storage.local.set({ isLoop: true });
 
     try {
         for (let i = 0; i < RAG.length; i++) {
             const data = { sending_page_text: RAG[i] };
-            console.log(`RAG ${i + 1}:`, data);
+            console.log(`RAG input ${i + 1}:`, data);
             try {
-                const result = await ApiCall(data);  // Chiamata API per ciascun prompt
-                console.log(`RAG output ${i + 1}:`, result);
+                await ApiCall(data, "RAG");  // Chiamata API per ciascun prompt
+                //console.log(`RAG output ${i + 1}:`, result);
             } catch (error) {
                 console.error(`Error RAG ${i + 1}:`, error);
             }
         }
     } finally {
-        // Imposta lo stato globale a false dopo il completamento del loop
-        browser.storage.local.set({ isLoop: false });
 
     }
 }
 
-// Chiamata all'api attravaerso messaggio allo script di backgourd
-function ApiCall(data) {
+// Funzione per inviare la richiesta di chiamata all'api verso il backgroud
+async function ApiCall(data, site) {
+    
     try {
-        // Invia il messaggio asincrono al background script e aspetta la risposta
-        const response =  browser.runtime.sendMessage({
-            action: "call_LLM_Api",
+        // Invia il messaggio al background script con un ID unico
+        await browser.runtime.sendMessage({
+            type: "call_LLM_Api",
             data: data,
+            site: "model_training", site,
         });
 
-        if (response.error) {
-            console.error("Errore dal background script:", response.error);
-            throw new Error(response.error); // Propaga l'errore
-        } else {
-            console.log("Risposta dal background script:", response.result);
-            return response.result; // Ritorna il risultato
-        }
+        return;
     } catch (error) {
-        console.error("Errore nell'invio del messaggio:", error);
-        throw error; // Propaga l'errore
+        console.error("Errore durante l'invio del messaggio:", error);
+        throw error;
     }
-} 
+}
