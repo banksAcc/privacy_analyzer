@@ -91,81 +91,34 @@ const RAG = [
 
 ];
 
-// Funzione che chiama ApiCall i volte con input da Few_Shot, 
-export async function train_FewShot() {
-    // Notifica che il ciclo di training è iniziato
-    try {
-
-        for (let i = 0; i < Few_Shot.length; i++) {  // Itera su tutti gli esempi nell'array Few_Shot
-            const data = { sending_page_text: Few_Shot[i] };
-            console.log(`AFewShot Input ${i + 1}:`, data);
-            try {
-                await ApiCall(data,"FewShot");  // Chiamata API per ciascun esempio
-                //console.log(`AFewShot output ${i + 1}:`, result);
-            } catch (error) {
-                console.error(`Error AFewShot ${i + 1}:`, error);
-            }
-        }
-    } finally {
-
-    }
-}
-
-// Funzione che chiama ApiCall i volte con input da Chaining
-export async function train_Chaining() {
-
-    try {
-        let previousResult = ""; // Inizializzi la variabile che conterrà l'output precedente
-        for (let i = 0; i < Chaining.length; i++) {
-            const prompt = previousResult
-                ? Chaining[i].replace("Text:", `Text: "${previousResult}"`)
-                : Chaining[i];
-
-            const data = { sending_page_text: prompt };
-            console.log(`Chaining ${i + 1}:`, data);
-
-            try {
-                const result = await ApiCall(data);  // Aspetta il completamento della chiamata API
-                previousResult = result.LLM_output_long || "";  // Salva l'output per il prossimo step
-                console.log(`Chaining output ${i + 1}:`, result);
-            } catch (error) {
-                console.error(`Error Chaining ${i + 1}:`, error);
-                break;
-            }
-        }
-    } finally {
-
-    }
-}
-
-// Funzione che chiama ApiCall i volte con input da RAG
-export async function train_RAG() {
-
-    try {
-        for (let i = 0; i < RAG.length; i++) {
-            const data = { sending_page_text: RAG[i] };
-            console.log(`RAG input ${i + 1}:`, data);
-            try {
-                await ApiCall(data, "RAG");  // Chiamata API per ciascun prompt
-                //console.log(`RAG output ${i + 1}:`, result);
-            } catch (error) {
-                console.error(`Error RAG ${i + 1}:`, error);
-            }
-        }
-    } finally {
-
-    }
-}
-
 // Funzione per inviare la richiesta di chiamata all'api verso il backgroud
-async function ApiCall(data, site) {
-    
+export async function promptApiCall(type) {
+    let data;
+
+    switch (type) {
+
+        case "RAG":
+            data = RAG;
+            break
+        
+        case "Chaining":
+            data = Chaining; 
+            break
+        
+        case "Few_Shot":
+            data = Few_Shot;
+            break
+        
+        default:
+            data = []
+    };
+            
     try {
         // Invia il messaggio al background script con un ID unico
         await browser.runtime.sendMessage({
-            type: "call_LLM_Api",
+            action: "call_LLM_Api",
             data: data,
-            site: "model_training", site,
+            type: type,
         });
 
         return;

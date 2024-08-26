@@ -115,9 +115,9 @@ browser.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
     };
 
     // Chiamata per fare il prompt engineering
-    if (message.type === "call_LLM_Api") {
-        const data = message.data; 
-        const site = message.site;
+    if (message.action === "call_LLM_Api") {
+        const data = message.data;
+        const type = message.type;
 
         console.log("Richiesta ricevuta per la chiamata all'Api");
 
@@ -125,15 +125,24 @@ browser.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
             try {
                 saveIsLoading(true);
 
-                console.log("Chiamata alla funzione CallAPI...");
-                const apiResult = await CallAPI(data, site, false); // Chiamata alla funzione API
-                
+                if (type == "RAG") {
+                    console.log("Chiamata alle funzioni per il training RAG");
+                    await train_RAG(data, type);
+
+                } else if (type == "Chaining") {
+                    console.log("Chiamata alle funzioni per il training Chaining");
+                    await train_Chaining(data, type);
+
+                } else {
+                    console.log("Chiamata alle funzioni per il training Few Shot");
+                    await train_FewShot(data, type);
+                }
                 saveIsLoading(false);
 
                 // Invia la risposta direttamente con sendResponse
-                console.log("Invio della risposta...", apiResult);
+                console.log("Conclusione Chiamata API");
                 sendResponse({
-                    result: apiResult // Usa il risultato elaborato dalla funzione API
+                    result: { status: true, info: "done" } // Usa il risultato elaborato dalla funzione API
                 });
             } catch (error) {
                 saveIsLoading(false);
@@ -142,7 +151,6 @@ browser.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
                     error: error.message
                 });
             } finally {
-
                 // Questo viene eseguito indipendentemente dal successo o dal fallimento
                 saveIsLoading(false);
             }
@@ -275,6 +283,12 @@ function elaborateOutput(data, inputText, skipped) {
                 LMM_rank: item.LMM_rank
             }))
         };
+
+        // Verifica se la lunghezza di specific_cat_10 è inferiore a 10
+        if (jsonData.specific_cat_10.length < 10) {
+            // Lancia un'eccezione con un messaggio di errore
+            throw new Error("L'LLM ha risposto con meno categorie specific_cat_10 del previsto, errore");
+        }
 
         return finalJson;
 
@@ -418,4 +432,69 @@ function saveIsLoading(isLoading) {
             reject(new Error(error));
         });
     });
+}
+
+// Funzione che chiama ApiCall i volte con input da Few_Shot, 
+async function train_FewShot(Few_Shot, type) {
+    // Notifica che il ciclo di training è iniziato
+    try {
+
+        for (let i = 0; i < Few_Shot.length; i++) {  // Itera su tutti gli esempi nell'array Few_Shot
+            const data = { sending_page_text: Few_Shot[i] };
+            console.log(`AFewShot Input ${i + 1}:`, data);
+            try {
+                await CallAPI(data, type, false);  // Chiamata API per ciascun esempio
+                //console.log(`AFewShot output ${i + 1}:`, result);
+            } catch (error) {
+                console.error(`Error AFewShot ${i + 1}:`, error);
+            }
+        }
+    } finally {
+
+    }
+}
+
+// Funzione che chiama ApiCall i volte con input da Chaining
+async function train_Chaining(Chaining, type) {
+
+    try {
+        let previousResult = ""; // Inizializzi la variabile che conterrà l'output precedente
+        for (let i = 0; i < Chaining.length; i++) {
+            const prompt = previousResult
+                ? Chaining[i].replace("Text:", `Text: "${previousResult}"`)
+                : Chaining[i];
+
+            const data = { sending_page_text: prompt };
+            console.log(`Chaining ${i + 1}:`, data);
+
+            try {
+                const result = await CallAPI(data, type, false);  // Aspetta il completamento della chiamata API
+                previousResult = result.LLM_output_long || "";  // Salva l'output per il prossimo step
+                console.log(`Chaining output ${i + 1}:`, result);
+            } catch (error) {
+                console.error(`Error Chaining ${i + 1}:`, error);
+                break;
+            }
+        }
+    } finally {
+
+    }
+}
+
+// Funzione che chiama ApiCall i volte con input da RAG
+async function train_RAG(RAG, type) {
+    try {
+        for (let i = 0; i < RAG.length; i++) {
+            const data = { sending_page_text: RAG[i] };
+            console.log(`RAG input ${i + 1}:`, data);
+            try {
+                await CallAPI(data, type, false);  // Chiamata API per ciascun prompt
+                //console.log(`RAG output ${i + 1}:`, result);
+            } catch (error) {
+                console.error(`Error RAG ${i + 1}:`, error);
+            }
+        }
+    } finally {
+
+    }
 }

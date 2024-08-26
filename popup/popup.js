@@ -1,4 +1,4 @@
-import { train_FewShot, train_Chaining, train_RAG } from './training.js';
+import { promptApiCall } from './training.js';
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const chaining = document.getElementById('training2');
     const rag = document.getElementById('training3');
     const refreshData = document.getElementById('refreshData');
-
 
     // Ottieni l'URL della pagina corrente
     browser.tabs.query({ active: true, currentWindow: true }, async function (tabs) {
@@ -215,7 +214,7 @@ document.addEventListener('DOMContentLoaded', () => {
     fewShot.addEventListener('click', async () => {
         toggleSpinner(true);
         try {
-            await train_FewShot(); // Chiama la funzione asincrona
+            await promptApiCall("Few_Shot"); // Chiama la funzione asincrona
         } catch (error) {
             console.error('Errore durante l\'esecuzione di trainModel1:', error);
         } finally {
@@ -226,7 +225,7 @@ document.addEventListener('DOMContentLoaded', () => {
     chaining.addEventListener('click', async () => {
         toggleSpinner(true);
         try {
-            await train_Chaining(); // Chiama la funzione asincrona
+            await promptApiCall("Chaining"); // Chiama la funzione asincrona
         } catch (error) {
             console.error('Errore durante l\'esecuzione di trainModel1:', error);
         } finally {
@@ -237,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
     rag.addEventListener('click', async () => {
         toggleSpinner(true);
         try {
-            await train_RAG(); // Chiama la funzione asincrona
+            await promptApiCall("RAG"); // Chiama la funzione asincrona
         } catch (error) {
             console.error('Errore durante l\'esecuzione di trainModel1:', error);
         } finally {
@@ -356,7 +355,7 @@ function updateIconPageNotEvaluated() {
     document.getElementById("moreText").style.display = 'none';
     document.getElementById("loading-spinner").style.display = "block";
     document.getElementById(25).innerText = "The analysis did not give valid results. Reload the page or reopen the popup. If the problem persists, it may be a data problem on this page.";
-    document.getElementById("refreshData").style.display = 'none';
+    //document.getElementById("refreshData").style.display = 'none';
     document.getElementById(11).src = '../rank_icons/one_to_five/classNo.jpg'; // Default icon
 
 

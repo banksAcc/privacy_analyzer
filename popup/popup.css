@@ -128,6 +128,9 @@ body {
     background-color: #f9f9f9;
     margin-bottom: 5px;
     width: 280px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
 .box img {
@@ -176,6 +179,9 @@ body {
 
 .box-container {
     padding: 0 5px; /* Adjusted spacing between boxes */
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
 .header {
@@ -332,6 +338,9 @@ body {
     width: 100%;
     max-width: 1200px; /* Imposta una larghezza massima per evitare che il contenuto diventi troppo largo */
     box-sizing: border-box; /* Include padding e bordi nel calcolo della larghezza */
+    display: flex;
+    flex-direction: column;
+    flex: 1;
 }
 
 .content-row {
@@ -343,6 +352,9 @@ body {
 .box-container {
     padding: 0 5px; /* Aggiunge spazio tra le colonne */
     box-sizing: border-box; /* Include padding e bordi nel calcolo della larghezza */
+    display: flex;
+    flex-direction: column;
+    flex: 1
 }
 .col-md-6 {
     flex: 1 1 50%; /* Imposta la larghezza della colonna per occupare metà della larghezza della riga */
