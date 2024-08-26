@@ -66,13 +66,13 @@ const Few_Shot = [
 // Promp per il Chaining
 const Chaining = [
     `Step 1: Extract the main purpose of data collection from the following privacy policy text. Text: "Our service collects user information to improve the overall experience. We share this information with selected partners to provide additional services."`,
-    
+
     `Step 2: Based on the extracted purpose of data collection, identify if there is any mention of user control over their data in the following text. Text: "Users can manage their preferences through their account settings. We retain information until the user decides to delete their account."`,
-    
+
     `Step 3: Considering the mention of user control, analyze how the data is protected in the following text. Text: "We protect information through encryption. We will notify users in case of changes to the policy."`,
-    
+
     `Step 4: Review the policy’s response to Do Not Track signals and describe the implications. Text: "We do not respond to Do Not Track signals. Data collection practices for children comply with local regulations."`,
-    
+
     `Step 5: Summarize all the extracted information from the previous steps into a single, coherent privacy policy summary.`
 ];
 
@@ -93,72 +93,99 @@ const RAG = [
 
 // Funzione che chiama ApiCall i volte con input da Few_Shot, 
 export async function train_FewShot() {
-    for (let i = 0; i < Few_Shot.length; i++) {  // Itera su tutti gli esempi nell'array Few_Shot
-        const data = { sending_page_text: Few_Shot[i] };
-        console.log(`AFewShot ${i + 1}:`, data);
-        try {
-            const result = await ApiCall(data);  // Chiamata API per ciascun esempio
-            console.log(`AFewShot output ${i + 1}:`, result);
-        } catch (error) {
-            console.error(`Error AFewShot ${i + 1}:`, error);
+    // Notifica che il ciclo di training è iniziato
+    browser.storage.local.set({ isLoop: true });
+    try {
+
+        for (let i = 0; i < Few_Shot.length; i++) {  // Itera su tutti gli esempi nell'array Few_Shot
+            const data = { sending_page_text: Few_Shot[i] };
+            console.log(`AFewShot ${i + 1}:`, data);
+            try {
+                const result = await ApiCall(data);  // Chiamata API per ciascun esempio
+                console.log(`AFewShot output ${i + 1}:`, result);
+            } catch (error) {
+                console.error(`Error AFewShot ${i + 1}:`, error);
+            }
         }
+    } finally {
+        // Notifica che il ciclo di training è terminato
+        browser.storage.local.set({ isLoop: false });
+
     }
 }
 
 // Funzione che chiama ApiCall i volte con input da Chaining
 export async function train_Chaining() {
-    let previousResult = ""; // Inizializzi la variabile che conterrà l'output precedente
-    for (let i = 0; i < Chaining.length; i++) {
-        const prompt = previousResult 
-            ? Chaining[i].replace("Text:", `Text: "${previousResult}"`) 
-            : Chaining[i];
-        
-        const data = { sending_page_text: prompt };
-        console.log(`Chaining ${i + 1}:`, data);
-        
-        try {
-            const result = await ApiCall(data);  // Aspetta il completamento della chiamata API
-            previousResult = result.LLM_output_long || "";  // Salva l'output per il prossimo step
-            console.log(`Chaining output ${i + 1}:`, result);
-        } catch (error) {
-            console.error(`Error Chaining ${i + 1}:`, error);
-            break;
+    // Imposta lo stato globale per indicare che siamo in un loop
+    browser.storage.local.set({ isLoop: true });
+
+    try {
+        let previousResult = ""; // Inizializzi la variabile che conterrà l'output precedente
+        for (let i = 0; i < Chaining.length; i++) {
+            const prompt = previousResult
+                ? Chaining[i].replace("Text:", `Text: "${previousResult}"`)
+                : Chaining[i];
+
+            const data = { sending_page_text: prompt };
+            console.log(`Chaining ${i + 1}:`, data);
+
+            try {
+                const result = await ApiCall(data);  // Aspetta il completamento della chiamata API
+                previousResult = result.LLM_output_long || "";  // Salva l'output per il prossimo step
+                console.log(`Chaining output ${i + 1}:`, result);
+            } catch (error) {
+                console.error(`Error Chaining ${i + 1}:`, error);
+                break;
+            }
         }
+    } finally {
+        // Imposta lo stato globale a false dopo il completamento del loop
+        browser.storage.local.set({ isLoop: false });
+
     }
 }
 
 // Funzione che chiama ApiCall i volte con input da RAG
 export async function train_RAG() {
-    for (let i = 0; i < RAG.length; i++) {
-        const data = { sending_page_text: RAG[i] };
-        console.log(`RAG ${i + 1}:`, data);
-        try {
-            const result = await ApiCall(data);  // Chiamata API per ciascun prompt
-            console.log(`RAG output ${i + 1}:`, result);
-        } catch (error) {
-            console.error(`Error RAG ${i + 1}:`, error);
+    // Imposta lo stato globale per indicare che siamo in un loop
+    browser.storage.local.set({ isLoop: true });
+
+    try {
+        for (let i = 0; i < RAG.length; i++) {
+            const data = { sending_page_text: RAG[i] };
+            console.log(`RAG ${i + 1}:`, data);
+            try {
+                const result = await ApiCall(data);  // Chiamata API per ciascun prompt
+                console.log(`RAG output ${i + 1}:`, result);
+            } catch (error) {
+                console.error(`Error RAG ${i + 1}:`, error);
+            }
         }
+    } finally {
+        // Imposta lo stato globale a false dopo il completamento del loop
+        browser.storage.local.set({ isLoop: false });
+
     }
 }
 
 // Chiamata all'api attravaerso messaggio allo script di backgourd
 async function ApiCall(data) {
     try {
-      // Invia il messaggio asincrono al background script e aspetta la risposta
-      const response = await browser.runtime.sendMessage({
-        action: "call_LLM_Api",
-        data: data
-      });
-  
-      if (response.error) {
-        console.error("Errore dal background script:", response.error);
-        throw new Error(response.error); // Propaga l'errore
-      } else {
-        console.log("Risposta dal background script:", response.result);
-        return response.result; // Ritorna il risultato
-      }
+        // Invia il messaggio asincrono al background script e aspetta la risposta
+        const response = await browser.runtime.sendMessage({
+            action: "call_LLM_Api",
+            data: data,
+        });
+
+        if (response.error) {
+            console.error("Errore dal background script:", response.error);
+            throw new Error(response.error); // Propaga l'errore
+        } else {
+            console.log("Risposta dal background script:", response.result);
+            return response.result; // Ritorna il risultato
+        }
     } catch (error) {
-      console.error("Errore nell'invio del messaggio:", error);
-      throw error; // Propaga l'errore
+        console.error("Errore nell'invio del messaggio:", error);
+        throw error; // Propaga l'errore
     }
 }

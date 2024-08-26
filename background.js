@@ -1,6 +1,8 @@
 // Dichiarazione di una variabile globale
 let sessionData = {};
 
+let loopInfo = false;
+
 browser.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
     
     // Ottieni l'URL della pagina che ha inviato il messaggio
@@ -24,7 +26,7 @@ browser.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
                     if (existingIndex !== -1) {
                         // L'URL esiste già, sostituisci i dati con quelli più recenti
                         processedDataList[existingIndex].data = data;
-                        console.log(`Dati aggiornati per l'URL: ${currentPageUrl}`);
+                        console.log(`Dati aggiornati per l'URL (nuovo): ${currentPageUrl}`);
                     } else {
                         // L'URL non esiste, aggiungi i nuovi dati
                         processedDataList.push({
@@ -48,11 +50,11 @@ browser.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
             });
 
         } else {
-            CallAPI({ sending_page_text: message.content }, sendingPageUrl)
+            CallAPI({ sending_page_text: message.content }, sendingPageUrl, false)
                 .then(data => {
 
                 if (!data) {
-                    sendResponse({ success: false, error: "aaa" });
+                    sendResponse({ success: false, error: "doppia chiamata" });
                     return
                 }
                     
@@ -70,7 +72,7 @@ browser.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
                         // L'URL esiste già, sostituisci i dati con quelli più recenti solo se sono dati validi
                         if (data.LLM_output_long != "ERRORE") {
                             processedDataList[existingIndex].data = data;
-                            console.log(`Dati aggiornati per l'URL: ${currentPageUrl}`);
+                            console.log(`Dati aggiornati per l'URL (non nuovo): ${currentPageUrl}`);
                         } else {
                             console.log(`Dati elaborati per l'URL: ${currentPageUrl} non validi, non aggiorno! `);
                         }
@@ -103,14 +105,17 @@ browser.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
     }
     // Chiamata api da utente
     if (message.action === "call_LLM_Api") {
-        CallAPI(message.data, sendingPageUrl).then(result => {
-        sendResponse({result: result});
-      }).catch(error => {
-        sendResponse({error: error.message});
-      });
-      
-      // Indica che la risposta sarà inviata in modo asincrono
-      return true;
+        try {
+            const result = await TestCallAPI(message.data, sender.url, true);
+            console.log("pipppo");
+            sendResponse({ result: result });
+            console.log(result);
+        } catch (error) {
+            sendResponse({ error: error.message });
+        }
+
+        // Indica che la risposta sarà inviata in modo asincrono
+        return true;
     }
     // Chiamata per le variabi d'ambiente
     if (message.action === "envVar") {
@@ -123,28 +128,36 @@ browser.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
       // Indica che la risposta sarà inviata in modo asincrono
       return true;
     }
+
 });
 
 // Questa è la funzione da chiamare per l'api, cerca di restituire un json come in LLM/Mod_output.json
-async function CallAPI(data, site) {
-    const result = await ApiCall(data, site);
+async function CallAPI(data, site, enableDoubleSite) {
+    const result = await ApiCall(data, site,enableDoubleSite);
     return elaborateOutput(result.response, data.sending_page_text,result.skipped);
 }
 
+// Questa è la funzione da chiamare per l'api, cerca di restituire un json come in LLM/Mod_output.json
+async function TestCallAPI(data, site, enableDoubleSite) {
+    return "angelo";
+}
+
+
 // Qui avviene la chiama fisica all'api, generalmente non è necessario usare questa funzione, usare CallAPI 
-async function ApiCall(data, site) {
+async function ApiCall(data, site, enableDoubleSite) {
     try {
         // Controlla se una chiamata API per questo sito è già in corso
-        if (sessionData[site] && !sessionData[site].isComplete) {
+        if (sessionData[site] && !sessionData[site].isComplete && !enableDoubleSite) {
             console.log(`Chiamata API già in corso per il sito: ${site}. Chiamata ignorata.`);
             return { skipped: true, message: "API call already in progress for this site." };
         }
         
         // Imposta il flag iniziale nel sessionData per indicare che la chiamata è iniziata
-        sessionData[site] = {
-            isComplete: false,
-            site: site
-        };
+        if (!enableDoubleSite)
+            sessionData[site] = {
+                isComplete: false,
+                site: site
+            };
 
         const response = await fetch( await getConfigValue('apiUrl'), {
             method: 'POST',
@@ -165,20 +178,25 @@ async function ApiCall(data, site) {
 
         if (!response.ok) {
             // Elimina l'entry corrispondente da sessionData in caso di errore
-            delete sessionData[site];
+            if (!enableDoubleSite)
+                delete sessionData[site];
 
             const errorText = await response.text();
             throw new Error(`Network response was not ok: ${errorText}`);
         }
 
         const result = await response.json();
+
         // Imposta il flag nel sessionData per indicare che la chiamata è completata
-        sessionData[site].isComplete = true;
+        if (!enableDoubleSite)
+            sessionData[site].isComplete = true;
 
         return result;
     } catch (error) {
+
         // Elimina l'entry corrispondente da sessionData in caso di errore
-        delete sessionData[site];
+        if (!enableDoubleSite)
+            delete sessionData[site];
 
         console.error('Errore nella chiamata API', error.message);
         throw error;  // Rifiuta la promessa in caso di errore

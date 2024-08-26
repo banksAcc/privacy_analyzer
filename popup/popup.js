@@ -1,7 +1,7 @@
-import { train_FewShot, train_Chaining, train_RAG} from './training.js';
+import { train_FewShot, train_Chaining, train_RAG } from './training.js';
 
 document.addEventListener('DOMContentLoaded', () => {
-    
+
     // Variabile globale per memorizzare i riferimenti ai grafici
     const charts = {};
 
@@ -17,8 +17,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const rag = document.getElementById('training3');
     const refreshData = document.getElementById('refreshData');
 
+
     // Ottieni l'URL della pagina corrente
-    browser.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+    browser.tabs.query({ active: true, currentWindow: true }, async function (tabs) {
+        
+        browser.storage.local.get('isLoop').then((result) => {
+            const isLoop = result.isLoop || false;
+            // Utilizza lo stato recuperato come necessario
+            toggleSpinner(isLoop);
+        });
+        
         let currentPageUrl = tabs[0].url;
 
         // Recupera la lista di dati salvata
@@ -92,7 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
         else
             document.getElementById("pie-chart").style.display = "none";
 
-        
+
         // Ottieni l'URL della pagina corrente
         browser.tabs.query({ active: true, currentWindow: true }, function (tabs) {
             let currentPageUrl = tabs[0].url;
@@ -221,7 +229,7 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Errore durante l\'esecuzione di trainModel1:', error);
         } finally {
             toggleSpinner(false);
-        } 
+        }
     });
 
     // In ascolto sul click pulsante rag
@@ -237,34 +245,34 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // In ascolto sul click pulsante refresh dati
-    document.getElementById('refreshData').addEventListener('click', async () => {
+    refreshData.addEventListener('click', async () => {
         try {
             updateIconPageNotEvaluated();
-    
+
             // Ottieni la scheda attiva
             let [tab] = await browser.tabs.query({ active: true, currentWindow: true });
-    
+
             // Ottieni l'URL della pagina corrente
             const currentPageUrl = tab.url;
-    
+
             // Recupera la lista corrente dal browser.storage.local
             let result = await browser.storage.local.get({ processedDataList: [] });
             let processedDataList = result.processedDataList;
-    
+
             // Filtra la lista per rimuovere l'elemento con l'URL corrente
             processedDataList = processedDataList.filter(item => item.url !== currentPageUrl);
-    
+
             // Salva la lista aggiornata nella memoria locale
             await browser.storage.local.set({ processedDataList: processedDataList });
             console.log("Dati aggiornati nella memoria locale.");
-    
+
             // Invia un messaggio al content script della scheda attiva
             await browser.tabs.sendMessage(tab.id, { action: 'reloadLMM' });
         } catch (error) {
             console.error('Errore durante l\'aggiornamento dei dati:', error);
         }
     });
-    
+
 });
 
 // Aggiorna i dati degli elementi in funzione della valutazione della pagina
