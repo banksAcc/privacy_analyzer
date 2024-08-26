@@ -188,4 +188,4 @@ function ApiCall(data) {
         console.error("Errore nell'invio del messaggio:", error);
         throw error; // Propaga l'errore
     }
-} 
+}

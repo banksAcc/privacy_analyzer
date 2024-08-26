@@ -106,8 +106,8 @@ browser.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
     // Chiamata api da utente
     if (message.action === "call_LLM_Api") {
         try {
-            const result = await TestCallAPI(message.data, sender.url, true);
-            console.log("pipppo");
+            const result = await TestCallAPI(message.data, sender.url);
+            console.log("pippo");
             sendResponse({ result: result });
             console.log(result);
         } catch (error) {
