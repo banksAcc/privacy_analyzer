@@ -65,5 +65,3 @@ Now, format this information in the following JSON structure:
 }
 
 Please generate the JSON response.
-
-

@@ -126,6 +126,3 @@ Expected result:
 "${textToAnnotate}"
 
 Expected result:
-
-
-

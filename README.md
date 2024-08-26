@@ -39,4 +39,3 @@ PARAMETER <parameter> <parametervalue> spicifichiamo alcuni parametri al fine di
 1. Descrizione del metodo
 2. Obiettivi
 3. How to...
-
