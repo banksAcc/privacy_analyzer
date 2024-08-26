@@ -169,10 +169,10 @@ export async function train_RAG() {
 }
 
 // Chiamata all'api attravaerso messaggio allo script di backgourd
-async function ApiCall(data) {
+function ApiCall(data) {
     try {
         // Invia il messaggio asincrono al background script e aspetta la risposta
-        const response = await browser.runtime.sendMessage({
+        const response =  browser.runtime.sendMessage({
             action: "call_LLM_Api",
             data: data,
         });
@@ -188,4 +188,4 @@ async function ApiCall(data) {
         console.error("Errore nell'invio del messaggio:", error);
         throw error; // Propaga l'errore
     }
-}
+} 
