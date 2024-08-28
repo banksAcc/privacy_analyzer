@@ -26,16 +26,10 @@ PARAMETER <parameter> <parametervalue> spicifichiamo alcuni parametri al fine di
 3. temperature : vogliamo una risposta quanto più standard e non creativa nella struttura e mediamante creativa nei testi di riassunto.
 
 ## N.1 Prompt Few-Shot
-1. Questo metodo consiste nel fornire al modello vari esempi di come deve comportarsi quando gli viene chiesto di svolgere un compito. Questo aiuta il modello non solo a comprendere meglio il contesto ma anche a indirizzarlo verso il tipo di risposta desiderata.
-2. È bene usare questo modello se si ha bisogno di maggiore precisione e coerenza nelle risposte grazie agli esempi o anche nel caso in cui i tipi di informazioni nelle privacy policy sono strutturati in modi diversi o sono espressi in linguaggi differenti.
-3. Per impostare questa tipologia di prompt si deve formire al modello uno o due esempi di estrazione di informazion da altre privacy policy e poi si chiede al modello di fare lo stesso per un nuovo testo.
+Questo metodo consiste nel fornire al modello vari esempi di come deve comportarsi quando gli viene chiesto di svolgere un compito. Questo aiuta il modello non solo a comprendere meglio il contesto ma anche a indirizzarlo verso il tipo di risposta desiderata. È bene usare questo modello se si ha bisogno di maggiore precisione e coerenza nelle risposte grazie agli esempi o anche nel caso in cui i tipi di informazioni nelle privacy policy sono strutturati in modi diversi o sono espressi in linguaggi differenti. Per impostare questa tipologia di prompt si deve formire al modello uno o due esempi di estrazione di informazion da altre privacy policy e poi si chiede al modello di fare lo stesso per un nuovo testo.
 
 ## N.2 Prompt Chaining
-1. Il prompting chaining consiste nell'utilizzare più prompt in sequenza facendo in modo che l'output di un prompt diventi l'input per il successivo. Questo permette di suddividere un problema complesso in sotto-problemi gestibili.
-2. È bene usare questo modello per scomporre il processo in fasi gestibili migliorando la precisione e la coerenza del risultato finale. Inoltre usando questa tecnica è possibile automatizzare in modo efficace la classificazione delle privacy policy.
-3. Nel nostro caso abbiamo 3 prompt che rispettivamente consistono nell'estrarre le informazioni chiave sulle privacy policy, classificare le informazioni relative a queste e generare l'output finale.
+Il prompting chaining consiste nell'utilizzare più prompt in sequenza facendo in modo che l'output di un prompt diventi l'input per il successivo. Questo permette di suddividere un problema complesso in sotto-problemi gestibili. È bene usare questo modello per scomporre il processo in fasi gestibili migliorando la precisione e la coerenza del risultato finale. Inoltre usando questa tecnica è possibile automatizzare in modo efficace la classificazione delle privacy policy. Nel nostro caso abbiamo 5 prompt che rispettivamente consistono nell'estrarre le informazioni chiave sulle privacy policy, verificare se nei dati c'è il riferimento al controllo dell'utente sui propri dati, analizzare in che modo i dati sono protetti, esaminare la risposta della policy ai Do Not Track e generare l'output finale sulla base delle informazioni estratte negli step precedenti.
 
 ## N.3 Retrieval Augmented Generation (RAG)
-1. Descrizione del metodo
-2. Obiettivi
-3. How to...
+Questa tecnica combina tecniche di retrieval insieme a quelle di generation (generazione di testo) per migliorare l’LLM. L’utilità di questa tecnica si evidenzia in particolar modo quando si lavora con LLM di grandi dimensioni che richiedono risposte molto accurate. Questa tecnica ha il vantaggio di dare risposte precise e con informazioni aggiornate in tempo reale.

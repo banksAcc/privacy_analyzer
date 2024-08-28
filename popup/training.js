@@ -4,7 +4,7 @@ const Few_Shot = [
     Expected result: 
     {
         "LLM_output_long": "We collect and share information to improve services. Users can manage preferences. We retain data until account deletion and protect information with encryption. Notifications of policy changes will be sent. We do not respond to Do Not Track.",
-        "general_cat_5": 1,
+        "general_cat_5": 2,
         "specific_cat_10": [
             {
                 "code" : 1,
