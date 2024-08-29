@@ -457,21 +457,31 @@ async function train_FewShot(Few_Shot, type) {
 // Funzione che chiama ApiCall i volte con input da Chaining
 async function train_Chaining(Chaining, type) {
     try {
-        let previousResult = ""; // Inizializzi la variabile che conterrà l'output precedente
+        let step1Result = ""; // Variabile per salvare l'output dello step 1
+
         for (let i = 0; i < Chaining.length; i++) {
-            // Esegui la sostituzione dell'output precedente, se presente
-            let prompt = Chaining[i];
-            if (previousResult) {
-                prompt = prompt.replace(/\[Insert summary from Step 1\]/g, previousResult.replace(/"/g, '\\"')); 
+            let prompt;
+
+            // Per il primo step, usiamo il prompt originale
+            if (i === 0) {
+                prompt = Chaining[i];
+            } else {
+                // Per gli altri step, sostituiamo [Insert summary from Step 1] con il risultato del primo step
+                prompt = Chaining[i].replace(/\[Insert summary from Step 1\]/g, step1Result.replace(/"/g, '\\"'));
             }
-            
+
             const data = { sending_page_text: prompt };
             console.log(`Chaining ${i + 1}:`, data);
 
             try {
                 const result = await CallAPI(data, type, false);  // Aspetta il completamento della chiamata API
-                previousResult = result.LLM_output_long || "";  // Salva l'output per il prossimo step
                 console.log(`Chaining output ${i + 1}:`, result);
+
+                if (i === 0) {
+                    // Salva il risultato dello step 1
+                    step1Result = result.LLM_output_long || "";
+                }
+
             } catch (error) {
                 console.error(`Error Chaining ${i + 1}:`, error);
                 break;
