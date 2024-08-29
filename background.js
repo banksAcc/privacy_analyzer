@@ -492,7 +492,6 @@ async function train_Chaining(Chaining, type) {
     }
 }
 
-
 // Funzione che chiama ApiCall i volte con input da RAG
 async function train_RAG(RAG, type) {
     try {

@@ -105,7 +105,6 @@ const RAG = [
     "If and how are Do Not Track signals honored?",
     "What practices apply to specific groups of users (e.g., children, Europeans, California residents)?",
     "Additional sub-labels for general information, contact details, and practices not covered by other categories.",
-
 ];
 
 // Funzione per inviare la richiesta di chiamata all'api verso il backgroud
