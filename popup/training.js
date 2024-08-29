@@ -3,64 +3,61 @@ const Few_Shot = [
     `Exemple 1: Text of privacy policy: Welcome to Instagram (\"Instagram,\" \"we,\" \"us\" or \"our\"). Instagram provides a fast, beautiful and fun way for you to share media through our content-sharing platform. Just snap a photo, choose a filter to transform the look and feel, add comments (if you like) and share! Our Privacy Policy explains how we and some of the companies we work with collect, use, share and protect information in relation to our mobile services, web site, and any software provided on or in connection with Instagram services (collectively, the \"Service\"), and your choices about the collection and use of your information. By using our Service you understand and agree that we are providing a platform for you to post content, including photos, comments and other materials (\"User Content\"), to the Service and to share User Content publicly. This means that other Users may search for, see, use, or share any of your User Content that you make publicly available through the Service, consistent with the terms and conditions of this Privacy Policy and our Terms of Use (which can be found at http://instagram.com/about/legal/terms/). Our Policy applies to all visitors, users, and others who access the Service (\"Users\").
     Expected result: 
    {
-    "LLM_output_long": "Instagram collects, uses, and shares user content as part of its service, with publicly posted content visible to others. The policy applies to all users and explains how information is managed. The details on data access, user control options, and specific protections are limited, but general information about data collection is provided.",
-    "general_cat_5": 3,
-    "specific_cat_10": [
-        {
-            "code": 1,
-            "LMM_output": "Instagram collects user content and info for service provision.",
-            "LMM_rank": 2
-        },
-        {
-            "code": 2,
-            "LMM_output": "Third parties may access shared user content.",
-            "LMM_rank": 3
-        },
-        {
-            "code": 3,
-            "LMM_output": "User content may be controlled by privacy settings.",
-            "LMM_rank": 2
-        },
-        {
-            "code": 4,
-            "LMM_output": "No details provided on editing or deleting data.",
-            "LMM_rank": 3
-        },
-        {
-            "code": 5,
-            "LMM_output": "No mention of data retention duration.",
-            "LMM_rank": 3
-        },
-        {
-            "code": 6,
-            "LMM_output": "Limited protection details provided.",
-            "LMM_rank": 2
-        },
-        {
-            "code": 7,
-            "LMM_output": "No mention of notification about policy changes.",
-            "LMM_rank": 3
-        },
-        {
-            "code": 8,
-            "LMM_output": "No mention of Do Not Track signals.",
-            "LMM_rank": 3
-        },
-        {
-            "code": 9,
-            "LMM_output": "No specific practices for different user groups.",
-            "LMM_rank": 3
-        },
-        {
-            "code": 10,
-            "LMM_output": "General description of Instagram's service and policy coverage.",
-            "LMM_rank": 0
-        }
-    ]
-}
-
-
-`
+        "LLM_output_long": "Instagram collects, uses, and shares user content as part of its service, with publicly posted content visible to others. The policy applies to all users and explains how information is managed. The details on data access, user control options, and specific protections are limited, but general information about data collection is provided.",
+        "general_cat_5": 3,
+        "specific_cat_10": [
+            {
+                "code": 1,
+                "LMM_output": "Instagram collects user content and info for service provision.",
+                "LMM_rank": 2
+            },
+            {
+                "code": 2,
+                "LMM_output": "Third parties may access shared user content.",
+                "LMM_rank": 3
+            },
+            {
+                "code": 3,
+                "LMM_output": "User content may be controlled by privacy settings.",
+                "LMM_rank": 2
+            },
+            {
+                "code": 4,
+                "LMM_output": "No details provided on editing or deleting data.",
+                "LMM_rank": 3
+            },
+            {
+                "code": 5,
+                "LMM_output": "No mention of data retention duration.",
+                "LMM_rank": 3
+            },
+            {
+                "code": 6,
+                "LMM_output": "Limited protection details provided.",
+                "LMM_rank": 2
+            },
+            {
+                "code": 7,
+                "LMM_output": "No mention of notification about policy changes.",
+                "LMM_rank": 3
+            },
+            {
+                "code": 8,
+                "LMM_output": "No mention of Do Not Track signals.",
+                "LMM_rank": 3
+            },
+            {
+                "code": 9,
+                "LMM_output": "No specific practices for different user groups.",
+                "LMM_rank": 3
+            },
+            {
+                "code": 10,
+                "LMM_output": "General description of Instagram's service and policy coverage.",
+                "LMM_rank": 0
+            }
+        ]
+    }`
 ];
 
 /*
@@ -202,21 +199,21 @@ export async function promptApiCall(type) {
         case "RAG":
             data = RAG;
             break
-        
+
         case "Chaining":
-            data = Chaining; 
+            data = Chaining;
             break
-        
+
         case "Few_Shot":
             data = Few_Shot;
             break
-        
+
         default:
             data = []
     };
-            
+
     try {
-        // Invia il messaggio al background script con un ID unico
+        // Invia il messaggio al background script
         await browser.runtime.sendMessage({
             action: "call_LLM_Api",
             data: data,
