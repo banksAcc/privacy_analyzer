@@ -4,7 +4,7 @@ const Few_Shot = [
     Expected result: 
    {
     "LLM_output_long": "Instagram collects, uses, and shares user content as part of its service, with publicly posted content visible to others. The policy applies to all users and explains how information is managed. The details on data access, user control options, and specific protections are limited, but general information about data collection is provided.",
-    "general_cat_5": 4,
+    "general_cat_5": 3,
     "specific_cat_10": [
         {
             "code": 1,
@@ -65,16 +65,31 @@ const Few_Shot = [
 
 // Promp per il Chaining
 const Chaining = [
-    `Step 1: Extract the main purpose of data collection from the following privacy policy text. Text: "Our service collects user information to improve the overall experience. We share this information with selected partners to provide additional services."`,
+    // Step 1: Estrazione dello scopo principale della raccolta dati
+    `Step 1: Examine the following text from the privacy policy and identify the primary purpose for which user data is collected. Report the reason why the service collects user information. Text: "Instagram provides a platform for posting content, including photos, comments, and other materials, and for sharing content publicly. Our Privacy Policy explains how we and some of the companies we work with collect, use, share, and protect information related to our mobile services, website, and any software provided in connection with Instagram's services."`,
 
-    `Step 2: Based on the extracted purpose of data collection, identify if there is any mention of user control over their data in the following text. Text: "Users can manage their preferences through their account settings. We retain information until the user decides to delete their account."`,
+    // Step 2: Analisi della condivisione dei dati con terze parti
+    `Step 2: Based on the information collected, assess whether the policy mentions how user data may be shared with third parties. Describe the contexts and conditions under which sharing occurs. Text: "Instagram shares information with some of the companies we work with to provide the service, in accordance with our privacy policy."`,
 
-    `Step 3: Considering the mention of user control, analyze how the data is protected in the following text. Text: "We protect information through encryption. We will notify users in case of changes to the policy."`,
+    // Step 3: Valutazione delle scelte e dei controlli disponibili per l'utente
+   `Step 3: Analyze the control options and choices available to the user regarding the management of their data. Identify if the user can access, modify, or delete their information. Text: "By using our service, you agree to share your content publicly. You can manage sharing preferences through your account settings."`,
 
-    `Step 4: Review the policy’s response to Do Not Track signals and describe the implications. Text: "We do not respond to Do Not Track signals. Data collection practices for children comply with local regulations."`,
+    // Step 4: Esame delle politiche di conservazione dei dati
+    `Step 4: Evaluate how long user data is retained. Verify if the privacy policy explicitly indicates retention periods or conditions for data deletion. Text: "Instagram retains user information until the account is deleted or as required by law."`,
 
-    `Step 5: Summarize all the extracted information from the previous steps into a single, coherent privacy policy summary.`
+    // Step 5: Analisi delle misure di protezione dei dati adottate
+    `Step 5: Considering the previous information, analyze the data protection measures adopted. Describe how users' personal information is safeguarded. Text: "Instagram uses security measures such as encryption to protect user data, in collaboration with partner companies."`,
+    // Step 6: Revisione della gestione dei segnali Do Not Track (DNT)
+    `Step 6: Verify if the policy mentions how Do Not Track (DNT) signals for online tracking and advertising. Analyze the implications of this management for user privacy. Text: "Instagram does not respond to Do Not Track signals, but complies with local regulations for tracking minors and users in certain jurisdictions."`,
+
+    // Step 7: Identificazione di pratiche specifiche per gruppi particolari di utenti
+    `Step 7: Examine the privacy policy to identify practices concerning specific groups of users, such as minors or residents of certain regions. Describe any differences in data treatment for these groups. Text: "Our Privacy Policy applies to all users of the service, including minors and users in Europe, in accordance with local laws."`,
+
+    // Step 8: Sintesi delle informazioni estratte in un riepilogo coerente
+    `Step 8: Based on the previous analyses, summarize all the extracted information into a single coherent overview of the privacy policy. Include the purpose of data collection, sharing with third parties, user controls, data protection, DNT signal management, and any specific practices for particular groups of users.`
 ];
+
+
 
 // Promot per il RAG
 const RAG = [
