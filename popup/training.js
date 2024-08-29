@@ -93,6 +93,21 @@ const Chaining = [
     `Step 10: Based on the previous analyses, synthesize the extracted information, organizing it into the 10 specific categories (data collection, sharing with third parties, user controls, retention, protection, policy change notifications, DNT signal management, and practices for specific user groups). Provide a final summary that encapsulates the privacy policy coherently.`
 ];
 
+// Promot per il RAG
+const RAG = [
+    "How and why does the service collect user information?",
+    "With whom is user data shared, and for what purpose?",
+    "What control options are available to users?",
+    "If and how can users access, edit, or delete their information?",
+    "How long is user data retained?",
+    "How is user data protected?",
+    "If and how will users be informed about changes to the privacy policy?",
+    "If and how are Do Not Track signals honored?",
+    "What practices apply to specific groups of users (e.g., children, Europeans, California residents)?",
+    "Additional sub-labels for general information, contact details, and practices not covered by other categories.",
+
+];
+
 // Funzione per inviare la richiesta di chiamata all'api verso il backgroud
 export async function promptApiCall(type) {
     let data;
