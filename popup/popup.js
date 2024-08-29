@@ -488,7 +488,7 @@ function highlightChartSlice(pageUrl, processedDataList, chart, code) {
     if (sliceIndex !== -1) {
         // Assicurati che borderWidth sia un array
         if (!Array.isArray(chart.data.datasets[0].borderWidth)) {
-            console.warn('borderWidth non è un array. Inizializzo come array.');
+            console.log('borderWidth non è un array. Inizializzo come array.');
             chart.data.datasets[0].borderWidth = Array(chart.data.labels.length).fill(1); // Imposta un valore predefinito
         }
 

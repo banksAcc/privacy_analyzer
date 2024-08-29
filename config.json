@@ -1,5 +1,5 @@
 {
     "apiUrl": "http://localhost:11434/api/generate",
-    "modelName": "modelgemma",
+    "modelName": "new-gem",
     "useMockApi": false
   }
