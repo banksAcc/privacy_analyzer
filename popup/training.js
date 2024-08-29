@@ -91,103 +91,35 @@ const Chaining = [
 */
 
 const Chaining = [
-    // Step 1: Estrarre le informazioni chiave delle privacy policy
-    `Step 1: Extract the key points from this privacy policy text. Focus on how user data is collected, shared, stored, and protected, and whether users have control over their information. Text: "Welcome to Instagram (\"Instagram,\" \"we,\" \"us\" or \"our\"). Instagram provides a fast, beautiful and fun way for you to share media through our content-sharing platform. Just snap a photo, choose a filter to transform the look and feel, add comments (if you like) and share! Our Privacy Policy explains how we and some of the companies we work with collect, use, share and protect information in relation to our mobile services, web site, and any software provided on or in connection with Instagram services (collectively, the \"Service\"), and your choices about the collection and use of your information. By using our Service you understand and agree that we are providing a platform for you to post content, including photos, comments and other materials (\"User Content\"), to the Service and to share User Content publicly. This means that other Users may search for, see, use, or share any of your User Content that you make publicly available through the Service, consistent with the terms and conditions of this Privacy Policy and our Terms of Use (which can be found at http://instagram.com/about/legal/terms/). Our Policy applies to all visitors, users, and others who access the Service (\"Users\").
-    Expected result: "`,
+    // Step 1: Extract key information
+    `Step 1: Read the following privacy policy text and identify the key points regarding data collection, usage, and protection. Provide a summary of the main information. Text: "Welcome to Instagram (\"Instagram,\" \"we,\" \"us\" or \"our\"). Instagram provides a fast, beautiful and fun way for you to share media through our content-sharing platform. Just snap a photo, choose a filter to transform the look and feel, add comments (if you like) and share! Our Privacy Policy explains how we and some of the companies we work with collect, use, share and protect information in relation to our mobile services, web site, and any software provided on or in connection with Instagram services (collectively, the \"Service\"), and your choices about the collection and use of your information. By using our Service you understand and agree that we are providing a platform for you to post content, including photos, comments and other materials (\"User Content\"), to the Service and to share User Content publicly. This means that other Users may search for, see, use, or share any of your User Content that you make publicly available through the Service, consistent with the terms and conditions of this Privacy Policy and our Terms of Use (which can be found at http://instagram.com/about/legal/terms/). Our Policy applies to all visitors, users, and others who access the Service (\"Users\")."`,
 
-    // Step 2: Classificazione delle informazioni estratte
-    `Step 2: Classify the extracted information according to the following categories:
-    1. How and why the service provider collects user information.
-    2. How user information may be shared with or collected by third parties.
-    3. Choices and control options available to users.
-    4. If and how users may access, edit, or delete their information.
-    5. How long user information is stored.
-    6. How user information is protected.
-    7. If and how users will be informed about changes to the privacy policy.
-    8. If and how Do Not Track signals for online tracking and advertising are honored.
-    9. Practices that pertain only to a specific group of users (e.g., children, Europeans, or California residents).
-    10. Additional sub-labels for introductory or general text, contact information, and practices not covered by the other categories.`,
+    // Step 2: Analyze data collection
+    `Step 2: Based on the extracted information, determine how and why the service provider collects user information. Provide a brief summary of the purpose behind data collection. Text: "[Insert summary from Step 1]"`,
 
-    // Step 3: Generazione del riepilogo e delle valutazioni
-    `Step 3: Generate a summary and scores based on the classified information. Provide a summary (max 100 characters) and a score from 1 to 3 (1 being very good and 3 being very bad) for each category. Additionally, provide an overall summary of the privacy policy (max 400 characters) and a general score from 1 to 5, where 1 is very good and 5 is very bad.`,
+    // Step 3: Assess data sharing with third parties
+    `Step 3: Evaluate if the policy mentions how user data may be shared with third parties. Describe the contexts and conditions under which this sharing occurs. Text: "[Insert summary from Step 1]"`,
 
-    // Step 4: Output in formato JSON
-    `Step 4: Output the final structured JSON response using the following pattern:
-    {
-        "LLM_output_long": "[Insert the overall summary here]",
-        "general_cat_5": [Insert the general score here],
-        "specific_cat_10": [
-            {
-                "code" : 1,
-                "LMM_output" : "[Insert summary for code 1 here]",
-                "LMM_rank": [Insert rank for code 1 here]
-            },
-            {
-                "code" : 2,
-                "LMM_output" : "[Insert summary for code 2 here]",
-                "LMM_rank": [Insert rank for code 2 here]
-            },
-            {
-                "code" : 3,
-                "LMM_output" : "[Insert summary for code 3 here]",
-                "LMM_rank": [Insert rank for code 3 here]
-            },
-            {
-                "code" : 4,
-                "LMM_output" : "[Insert summary for code 4 here]",
-                "LMM_rank": [Insert rank for code 4 here]
-            },
-            {
-                "code" : 5,
-                "LMM_output" : "[Insert summary for code 5 here]",
-                "LMM_rank": [Insert rank for code 5 here]
-            },
-            {
-                "code" : 6,
-                "LMM_output" : "[Insert summary for code 6 here]",
-                "LMM_rank": [Insert rank for code 6 here]
-            },
-            {
-                "code" : 7,
-                "LMM_output" : "[Insert summary for code 7 here]",
-                "LMM_rank": [Insert rank for code 7 here]
-            },
-            {
-                "code" : 8,
-                "LMM_output" : "[Insert summary for code 8 here]",
-                "LMM_rank": [Insert rank for code 8 here]
-            },
-            {
-                "code" : 9,
-                "LMM_output" : "[Insert summary for code 9 here]",
-                "LMM_rank": [Insert rank for code 9 here]
-            },
-            {
-                "code" : 10,
-                "LMM_output" : "[Insert summary for code 10 here]",
-                "LMM_rank": [Insert rank for code 10 here]
-            }
-        ]
-    }`,
+    // Step 4: Review user control options
+    `Step 4: Analyze the control options and choices available to the user regarding the management of their data. Specify if the user can access, modify, or delete their information. Text: "[Insert summary from Step 1]"`,
 
-    // Step 5: Generare l'output finale sulla base delle informazioni estratte negli step precedenti.
-    `Step 5: Review the JSON output for accuracy and completeness. Ensure that the summaries are concise and the scores accurately reflect the content of the privacy policy. Make any necessary adjustments before finalizing the output.`
-];
+    // Step 5: Examine data retention policies
+    `Step 5: Evaluate how long user data is retained. Verify if the privacy policy explicitly mentions retention periods or conditions for data deletion. Text: "[Insert summary from Step 1]"`,
 
+    // Step 6: Assess data protection measures
+    `Step 6: Analyze the data protection measures adopted. Describe how users' personal information is safeguarded. Text: "[Insert summary from Step 1]"`,
 
-// Promot per il RAG
-const RAG = [
-    "How and why does the service collect user information?",
-    "With whom is user data shared, and for what purpose?",
-    "What control options are available to users?",
-    "If and how can users access, edit, or delete their information?",
-    "How long is user data retained?",
-    "How is user data protected?",
-    "If and how will users be informed about changes to the privacy policy?",
-    "If and how are Do Not Track signals honored?",
-    "What practices apply to specific groups of users (e.g., children, Europeans, California residents)?",
-    "Additional sub-labels for general information, contact details, and practices not covered by other categories.",
+    // Step 7: Review notification of policy changes
+    `Step 7: Verify if the policy describes how users will be informed about changes to the privacy policy. Specify how and when these notifications are made. Text: "[Insert summary from Step 1]"`,
 
+    // Step 8: Evaluate handling of Do Not Track (DNT) signals
+    `Step 8: Examine whether the privacy policy mentions how Do Not Track (DNT) signals for online tracking and advertising are managed. Analyze the implications of this management for user privacy. Text: "[Insert summary from Step 1]"`,
+
+    // Step 9: Identify practices for specific user groups
+    `Step 9: Identify any practices specific to particular groups of users, such as minors or residents of certain regions (e.g., Europe or California). Describe any differences in data treatment for these groups. Text: "[Insert summary from Step 1]"`,
+
+    // Step 10: Synthesize and categorize information
+    `Step 10: Based on the previous analyses, synthesize the extracted information, organizing it into the 10 specific categories (data collection, sharing with third parties, user controls, retention, protection, policy change notifications, DNT signal management, and practices for specific user groups). Provide a final summary that encapsulates the privacy policy coherently.`
 ];
 
 // Funzione per inviare la richiesta di chiamata all'api verso il backgroud

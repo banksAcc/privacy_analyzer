@@ -456,14 +456,15 @@ async function train_FewShot(Few_Shot, type) {
 
 // Funzione che chiama ApiCall i volte con input da Chaining
 async function train_Chaining(Chaining, type) {
-
     try {
         let previousResult = ""; // Inizializzi la variabile che conterrà l'output precedente
         for (let i = 0; i < Chaining.length; i++) {
-            const prompt = previousResult
-                ? Chaining[i].replace("Text:", `Text: "${previousResult}"`)
-                : Chaining[i];
-
+            // Esegui la sostituzione dell'output precedente, se presente
+            let prompt = Chaining[i];
+            if (previousResult) {
+                prompt = prompt.replace(/\[Insert summary from Step 1\]/g, previousResult.replace(/"/g, '\\"')); 
+            }
+            
             const data = { sending_page_text: prompt };
             console.log(`Chaining ${i + 1}:`, data);
 
@@ -477,9 +478,10 @@ async function train_Chaining(Chaining, type) {
             }
         }
     } finally {
-
+        // Codice da eseguire al termine della funzione, se necessario
     }
 }
+
 
 // Funzione che chiama ApiCall i volte con input da RAG
 async function train_RAG(RAG, type) {
