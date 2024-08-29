@@ -60,7 +60,6 @@ const Few_Shot = [
     }`
 ];
 
-
 // Promp per il Chaining
 const Chaining = [
     // Step 1: Estrazione punti chiave
