@@ -83,7 +83,7 @@ const Chaining = [
     // Step 7: Esaminare se le policy informano gli utenti delle modifiche di policy
     `Step 7: Verify if the policy describes how users will be informed about changes to the privacy policy. Specify how and when these notifications are made. Text: "[Insert summary from Step 1]"`,
 
-    // Step 8: Evaluate handling of Do Not Track (DNT) signals
+    // Step 8: Valutazione della gestione dei segnali Do Not Track (DNT)
     `Step 8: Examine whether the privacy policy mentions how Do Not Track (DNT) signals for online tracking and advertising are managed. Analyze the implications of this management for user privacy. Text: "[Insert summary from Step 1]"`,
 
     // Step 9: Identificare policy riguardo una specifica parte di utenti come ad esempio minori
